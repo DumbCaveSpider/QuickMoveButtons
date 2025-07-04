@@ -89,7 +89,7 @@ EditCommand getEditCmd(MoveSize moveSize, MoveDirection moveDir) {
 
 class $modify(MyEditorUI, EditorUI) {
     struct Fields {
-        MoveSize moveSize = MoveSize::Small;
+        MoveSize moveSize = MoveSize::Small; // Current change
 
         CCMenu* m_buttonMenu;
 
@@ -169,7 +169,7 @@ class $modify(MyEditorUI, EditorUI) {
         m_fields->m_moveDownBtn->addChild(moveDownBtnIcon);
         m_fields->m_buttonMenu->addChild(m_fields->m_moveDownBtn);
 
-        // create the up btn
+        // create the left btn
         m_fields->m_moveLeftBtn = CCMenuItemSpriteExtra::create(
             moveBtnSprite,
             this,
@@ -180,7 +180,7 @@ class $modify(MyEditorUI, EditorUI) {
         m_fields->m_moveLeftBtn->setAnchorPoint({ 0.5, 0.5 });
         m_fields->m_moveLeftBtn->setPosition({ (m_fields->m_buttonMenu->getContentWidth() / 2.f) - 25.f, m_fields->m_buttonMenu->getContentHeight() / 2.f });
 
-        // move up button
+        // move left button
         auto moveLeftBtnIcon = CCSprite::createWithSpriteFrameName(moveBtnIconSpriteName);
         moveLeftBtnIcon->setScale(0.875f);
         moveLeftBtnIcon->setAnchorPoint({ 0.5, 0.5 });
@@ -191,7 +191,7 @@ class $modify(MyEditorUI, EditorUI) {
         m_fields->m_moveLeftBtn->addChild(moveLeftBtnIcon);
         m_fields->m_buttonMenu->addChild(m_fields->m_moveLeftBtn);
 
-        // create the up btn
+        // create the right btn
         m_fields->m_moveRightBtn = CCMenuItemSpriteExtra::create(
             moveBtnSprite,
             this,
@@ -202,7 +202,7 @@ class $modify(MyEditorUI, EditorUI) {
         m_fields->m_moveRightBtn->setAnchorPoint({ 0.5, 0.5 });
         m_fields->m_moveRightBtn->setPosition({ (m_fields->m_buttonMenu->getContentWidth() / 2.f) + 25.f, m_fields->m_buttonMenu->getContentHeight() / 2.f });
 
-        // move up button
+        // move right button
         auto moveRightBtnIcon = CCSprite::createWithSpriteFrameName(moveBtnIconSpriteName);
         moveRightBtnIcon->setScale(0.875f);
         moveRightBtnIcon->setAnchorPoint({ 0.5, 0.5 });
@@ -228,7 +228,7 @@ class $modify(MyEditorUI, EditorUI) {
     };
 
     // Move all objects based on the button being pressed
-    void onMove(EditCommand editCommand = EditCommand::SmallUp, float MOVE_OFFSET = 2.f) {
+    void onMove(EditCommand editCommand, float MOVE_OFFSET) {
         if (!m_editorLayer) {
             log::error("No editor layer found");
             return;
