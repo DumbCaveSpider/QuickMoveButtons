@@ -1,14 +1,102 @@
+#include "./QuickMove.hpp"
+
 #include <Geode/Geode.hpp>
 #include <Geode/modify/EditorUI.hpp>
 #include <Geode/utils/NodeIDs.hpp>
 
 using namespace geode::prelude;
+using namespace quickmove;
+
+// Get the move offset float depending on the set move distance
+float getMoveOffset(MoveSize moveSize) {
+    switch (moveSize) {
+    case MoveSize::Tiny:
+        return 0.5f;
+
+    case MoveSize::Small:
+        return 2.f;
+
+    case MoveSize::Half:
+        return 5.f;
+
+    case MoveSize::Normal:
+        return 10.f;
+
+    case MoveSize::Big:
+        return 25.f;
+
+    default:
+        return 2.f;
+    };
+
+    return 2.f;
+};
+
+// Returns the EditCommand based on object move size and direction
+EditCommand getEditCmd(MoveSize moveSize, MoveDirection moveDir) {
+    switch (moveSize) {
+    case MoveSize::Tiny:
+        switch (moveDir) {
+        case MoveDirection::Up:    return EditCommand::TinyUp;
+        case MoveDirection::Down:  return EditCommand::TinyDown;
+        case MoveDirection::Left:  return EditCommand::TinyLeft;
+        case MoveDirection::Right: return EditCommand::TinyRight;
+        };
+        break;
+
+    case MoveSize::Small:
+        switch (moveDir) {
+        case MoveDirection::Up:    return EditCommand::SmallUp;
+        case MoveDirection::Down:  return EditCommand::SmallDown;
+        case MoveDirection::Left:  return EditCommand::SmallLeft;
+        case MoveDirection::Right: return EditCommand::SmallRight;
+        };
+        break;
+
+    case MoveSize::Half:
+        switch (moveDir) {
+        case MoveDirection::Up:    return EditCommand::HalfUp;
+        case MoveDirection::Down:  return EditCommand::HalfDown;
+        case MoveDirection::Left:  return EditCommand::HalfLeft;
+        case MoveDirection::Right: return EditCommand::HalfRight;
+        };
+        break;
+
+    case MoveSize::Normal:
+        switch (moveDir) {
+        case MoveDirection::Up:    return EditCommand::Up;
+        case MoveDirection::Down:  return EditCommand::Down;
+        case MoveDirection::Left:  return EditCommand::Left;
+        case MoveDirection::Right: return EditCommand::Right;
+        };
+        break;
+
+    case MoveSize::Big:
+        switch (moveDir) {
+        case MoveDirection::Up:    return EditCommand::BigUp;
+        case MoveDirection::Down:  return EditCommand::BigDown;
+        case MoveDirection::Left:  return EditCommand::BigLeft;
+        case MoveDirection::Right: return EditCommand::BigRight;
+        };
+        break;
+
+    default:
+        return EditCommand::SmallUp;
+    };
+
+    return EditCommand::SmallUp;
+};
 
 class $modify(MyEditorUI, EditorUI) {
     struct Fields {
-        CCMenuItemSpriteExtra* m_moveUpBtn;
+        MoveSize moveSize = MoveSize::Small;
 
         CCMenu* m_buttonMenu;
+
+        CCMenuItemSpriteExtra* m_moveUpBtn;
+        CCMenuItemSpriteExtra* m_moveDownBtn;
+        CCMenuItemSpriteExtra* m_moveLeftBtn;
+        CCMenuItemSpriteExtra* m_moveRightBtn;
     };
 
     bool init(LevelEditorLayer * p0) {
@@ -70,7 +158,8 @@ class $modify(MyEditorUI, EditorUI) {
         };
     };
 
-    void onMove(EditCommand editCommand = EditCommand::SmallUp, float MOVE_OFFSET = 2.0f) {
+    // Move all objects based on the button being pressed
+    void onMove(EditCommand editCommand = EditCommand::SmallUp, float MOVE_OFFSET = 2.f) {
         if (!m_editorLayer) {
             log::error("No editor layer found");
             return;
@@ -164,6 +253,6 @@ class $modify(MyEditorUI, EditorUI) {
     };
 
     void onMoveUpButton(CCObject*) {
-        this->onMove();
+        this->onMove(getEditCmd(m_fields->moveSize, MoveDirection::Up), getMoveOffset(m_fields->moveSize));
     };
 };
