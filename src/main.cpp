@@ -70,7 +70,7 @@ class $modify(MyEditorUI, EditorUI) {
         };
     };
 
-    void onMoveUpButton(CCObject*) {
+    void onMove(EditCommand editCommand = EditCommand::SmallUp, float MOVE_OFFSET = 2.0f) {
         if (!m_editorLayer) {
             log::error("No editor layer found");
             return;
@@ -92,9 +92,6 @@ class $modify(MyEditorUI, EditorUI) {
         };
 
         log::info("Objects to move count: {}", objectsToMove->count());
-
-        // Move objects up by a small increment (2 units)
-        const float MOVE_OFFSET = 2.0f;
 
         // Store original positions for potential undo (using editor's built-in system)
         CCArray* validObjects = CCArray::create();
@@ -144,7 +141,7 @@ class $modify(MyEditorUI, EditorUI) {
                 CCPoint oldPos = gameObj->getPosition();
 
                 // Use transformObject with move command (1) and create undo (true)
-                this->transformObject(gameObj, EditCommand::SmallUp, true);
+                this->transformObject(gameObj, editCommand, true);
 
                 // Apply the actual movement after transform setup
                 CCPoint newPos = CCPoint(oldPos.x, oldPos.y + MOVE_OFFSET);
@@ -164,5 +161,9 @@ class $modify(MyEditorUI, EditorUI) {
         };
 
         // mmhmm love logs
+    };
+
+    void onMoveUpButton(CCObject*) {
+        this->onMove();
     };
 };
