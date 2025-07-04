@@ -107,7 +107,7 @@ class $modify(MyEditorUI, EditorUI) {
         m_fields->m_buttonMenu->setID("quick-move-menu"_spr);
         m_fields->m_buttonMenu->setPosition({ 315.0f, 125.0f });
         m_fields->m_buttonMenu->setAnchorPoint({ 0.5f, 0.5f });
-        m_fields->m_buttonMenu->setContentSize({ 75.0f, 75.0f });
+        m_fields->m_buttonMenu->setContentSize({ 125.0f, 125.0f });
         m_fields->m_buttonMenu->ignoreAnchorPointForPosition(false);
 
         // create visible background for the menu
@@ -135,7 +135,7 @@ class $modify(MyEditorUI, EditorUI) {
         m_fields->m_moveUpBtn->setID("move-up");
         m_fields->m_moveUpBtn->ignoreAnchorPointForPosition(false);
         m_fields->m_moveUpBtn->setAnchorPoint({ 0.5, 0.5 });
-        m_fields->m_moveUpBtn->setPosition({ m_fields->m_buttonMenu->getContentWidth() / 2.f, (m_fields->m_buttonMenu->getContentHeight() / 2.f) + 12.5f });
+        m_fields->m_moveUpBtn->setPosition({ m_fields->m_buttonMenu->getContentWidth() / 2.f, (m_fields->m_buttonMenu->getContentHeight() / 2.f) + 25.f });
 
         // move up button
         auto moveUpBtnIcon = CCSprite::createWithSpriteFrameName(moveBtnIconSpriteName);
@@ -156,7 +156,7 @@ class $modify(MyEditorUI, EditorUI) {
         m_fields->m_moveDownBtn->setID("move-down");
         m_fields->m_moveDownBtn->ignoreAnchorPointForPosition(false);
         m_fields->m_moveDownBtn->setAnchorPoint({ 0.5, 0.5 });
-        m_fields->m_moveDownBtn->setPosition({ m_fields->m_buttonMenu->getContentWidth() / 2.f, (m_fields->m_buttonMenu->getContentHeight() / 2.f) - 12.5f });
+        m_fields->m_moveDownBtn->setPosition({ m_fields->m_buttonMenu->getContentWidth() / 2.f, (m_fields->m_buttonMenu->getContentHeight() / 2.f) - 25.f });
 
         // move down button icon
         auto moveDownBtnIcon = CCSprite::createWithSpriteFrameName(moveBtnIconSpriteName);
@@ -178,7 +178,7 @@ class $modify(MyEditorUI, EditorUI) {
         m_fields->m_moveLeftBtn->setID("move-left");
         m_fields->m_moveLeftBtn->ignoreAnchorPointForPosition(false);
         m_fields->m_moveLeftBtn->setAnchorPoint({ 0.5, 0.5 });
-        m_fields->m_moveLeftBtn->setPosition({ (m_fields->m_buttonMenu->getContentWidth() / 2.f) - 12.5f, m_fields->m_buttonMenu->getContentHeight() / 2.f });
+        m_fields->m_moveLeftBtn->setPosition({ (m_fields->m_buttonMenu->getContentWidth() / 2.f) - 25.f, m_fields->m_buttonMenu->getContentHeight() / 2.f });
 
         // move up button
         auto moveLeftBtnIcon = CCSprite::createWithSpriteFrameName(moveBtnIconSpriteName);
@@ -200,7 +200,7 @@ class $modify(MyEditorUI, EditorUI) {
         m_fields->m_moveRightBtn->setID("move-right");
         m_fields->m_moveRightBtn->ignoreAnchorPointForPosition(false);
         m_fields->m_moveRightBtn->setAnchorPoint({ 0.5, 0.5 });
-        m_fields->m_moveRightBtn->setPosition({ (m_fields->m_buttonMenu->getContentWidth() / 2.f) - 12.5f, m_fields->m_buttonMenu->getContentHeight() / 2.f });
+        m_fields->m_moveRightBtn->setPosition({ (m_fields->m_buttonMenu->getContentWidth() / 2.f) + 25.f, m_fields->m_buttonMenu->getContentHeight() / 2.f });
 
         // move up button
         auto moveRightBtnIcon = CCSprite::createWithSpriteFrameName(moveBtnIconSpriteName);
@@ -318,7 +318,7 @@ class $modify(MyEditorUI, EditorUI) {
             objectsToMove->release();
         };
 
-        // mmhmm love logs
+        // mmhmm love logs <33
     };
 
     void onMoveUpButton(CCObject*) {
