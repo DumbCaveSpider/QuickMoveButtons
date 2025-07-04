@@ -186,6 +186,7 @@ class $modify(MyEditorUI, EditorUI) {
         moveLeftBtnIcon->setAnchorPoint({ 0.5, 0.5 });
         moveLeftBtnIcon->ignoreAnchorPointForPosition(false);
         moveLeftBtnIcon->setPosition({ m_fields->m_moveLeftBtn->getContentWidth() / 2.f, m_fields->m_moveLeftBtn->getContentHeight() / 2.f });
+        moveLeftBtnIcon->setRotation(90.f);
 
         m_fields->m_moveLeftBtn->addChild(moveLeftBtnIcon);
         m_fields->m_buttonMenu->addChild(m_fields->m_moveLeftBtn);
@@ -207,6 +208,7 @@ class $modify(MyEditorUI, EditorUI) {
         moveRightBtnIcon->setAnchorPoint({ 0.5, 0.5 });
         moveRightBtnIcon->ignoreAnchorPointForPosition(false);
         moveRightBtnIcon->setPosition({ m_fields->m_moveRightBtn->getContentWidth() / 2.f, m_fields->m_moveRightBtn->getContentHeight() / 2.f });
+        moveRightBtnIcon->setRotation(-90.f);
 
         m_fields->m_moveRightBtn->addChild(moveRightBtnIcon);
         m_fields->m_buttonMenu->addChild(m_fields->m_moveRightBtn);
