@@ -16,6 +16,7 @@ class $modify(MyEditorUI, EditorUI) {
 
         // create menu for the buttons
         m_fields->m_buttonMenu = CCMenu::create();
+        m_fields->m_buttonMenu->setID("quick-move-menu"_spr);
         m_fields->m_buttonMenu->setPosition({ 315.0f, 125.0f });
         m_fields->m_buttonMenu->setAnchorPoint({ 0.5f, 0.5f });
         m_fields->m_buttonMenu->setContentSize({ 75.0f, 75.0f });
@@ -40,9 +41,10 @@ class $modify(MyEditorUI, EditorUI) {
             this,
             menu_selector(MyEditorUI::onMoveUpButton)
         );
+        m_fields->m_moveUpBtn->setID("move-up");
         m_fields->m_moveUpBtn->ignoreAnchorPointForPosition(false);
         m_fields->m_moveUpBtn->setAnchorPoint({ 0.5, 0.5 });
-        m_fields->m_moveUpBtn->setPosition({ 35.f, 50.f });
+        m_fields->m_moveUpBtn->setPosition({ 35.f, 45.f });
 
         // up btn icon sprite
         auto moveUpBtnIcon = CCSprite::createWithSpriteFrameName("edit_upBtn_001.png");
@@ -68,11 +70,11 @@ class $modify(MyEditorUI, EditorUI) {
         };
     };
 
-    void onMoveUpButton(CCObject * sender) {
+    void onMoveUpButton(CCObject*) {
         if (!m_editorLayer) {
             log::error("No editor layer found");
             return;
-        }
+        };
 
         // Check for selected objects
         CCArray* objectsToMove = nullptr;
@@ -118,11 +120,13 @@ class $modify(MyEditorUI, EditorUI) {
         if (validObjects->count() == 0) {
             log::error("No valid GameObjects found to move");
             validObjects->release();
+
             if (objectsToMove != m_selectedObjects) {
                 objectsToMove->release();
-            }
+            };
+
             return;
-        }
+        };
 
         // Apply the movement with proper undo support using editor's transform system
         if (m_editorLayer) {
@@ -132,7 +136,7 @@ class $modify(MyEditorUI, EditorUI) {
             for (int i = 0; i < validObjects->count(); i++) {
                 auto gameObj = static_cast<GameObject*>(validObjects->objectAtIndex(i));
                 this->selectObject(gameObj, true);
-            }
+            };
 
             // Use the editor's transformObject function which properly handles undo
             for (int i = 0; i < validObjects->count(); i++) {
@@ -148,17 +152,17 @@ class $modify(MyEditorUI, EditorUI) {
 
                 log::info("Moved object from ({}, {}) to ({}, {})",
                           oldPos.x, oldPos.y, newPos.x, newPos.y);
-            }
+            };
 
             log::info("Successfully moved {} objects with undo support", validObjects->count());
-        }
+        };
 
         // Clean up
         validObjects->release();
         if (objectsToMove != m_selectedObjects) {
             objectsToMove->release();
-        }
+        };
 
         // mmhmm love logs
-    }
+    };
 };
