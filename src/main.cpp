@@ -132,10 +132,13 @@ class $modify(MyEditorUI, EditorUI) {
         m_fields->m_moveUpBtn->setID("move-up");
         m_fields->m_moveUpBtn->ignoreAnchorPointForPosition(false);
         m_fields->m_moveUpBtn->setAnchorPoint({ 0.5, 0.5 });
-        m_fields->m_moveUpBtn->setPosition({ 35.f, 45.f });
+        m_fields->m_moveUpBtn->setPosition({ m_fields->m_buttonMenu->getContentWidth() / 2.f, (m_fields->m_buttonMenu->getContentHeight() / 2.f) + 10.f });
 
-        // up btn icon sprite
-        auto moveUpBtnIcon = CCSprite::createWithSpriteFrameName("edit_upBtn_001.png");
+        // btn icon sprite
+        auto moveBtnIconSpriteName = "edit_upBtn_001.png";
+
+        // move up button
+        auto moveUpBtnIcon = CCSprite::createWithSpriteFrameName(moveBtnIconSpriteName);
         moveUpBtnIcon->setScale(0.875f);
         moveUpBtnIcon->setAnchorPoint({ 0.5, 0.5 });
         moveUpBtnIcon->ignoreAnchorPointForPosition(false);
@@ -143,6 +146,27 @@ class $modify(MyEditorUI, EditorUI) {
 
         m_fields->m_moveUpBtn->addChild(moveUpBtnIcon);
         m_fields->m_buttonMenu->addChild(m_fields->m_moveUpBtn);
+
+        // create the down btn
+        m_fields->m_moveDownBtn = CCMenuItemSpriteExtra::create(
+            moveBtnSprite,
+            this,
+            menu_selector(MyEditorUI::onMoveDownButton)
+        );
+        m_fields->m_moveDownBtn->setID("move-down");
+        m_fields->m_moveDownBtn->ignoreAnchorPointForPosition(false);
+        m_fields->m_moveDownBtn->setAnchorPoint({ 0.5, 0.5 });
+        m_fields->m_moveDownBtn->setPosition({ m_fields->m_buttonMenu->getContentWidth() / 2.f, (m_fields->m_buttonMenu->getContentHeight() / 2.f) - 10.f });
+
+        // move down button icon
+        auto moveDownBtnIcon = CCSprite::createWithSpriteFrameName(moveBtnIconSpriteName);
+        moveDownBtnIcon->setScale(0.875f);
+        moveDownBtnIcon->setAnchorPoint({ 0.5, 0.5 });
+        moveDownBtnIcon->ignoreAnchorPointForPosition(false);
+        moveDownBtnIcon->setPosition({ m_fields->m_moveDownBtn->getContentWidth() / 2.f, m_fields->m_moveDownBtn->getContentHeight() / 2.f });
+
+        m_fields->m_moveDownBtn->addChild(moveDownBtnIcon);
+        m_fields->m_buttonMenu->addChild(m_fields->m_moveDownBtn);
 
         // add the whole menu
         this->addChild(m_fields->m_buttonMenu);
@@ -254,5 +278,9 @@ class $modify(MyEditorUI, EditorUI) {
 
     void onMoveUpButton(CCObject*) {
         this->onMove(getEditCmd(m_fields->moveSize, MoveDirection::Up), getMoveOffset(m_fields->moveSize));
+    };
+
+    void onMoveDownButton(CCObject*) {
+        this->onMove(getEditCmd(m_fields->moveSize, MoveDirection::Down), getMoveOffset(m_fields->moveSize));
     };
 };
