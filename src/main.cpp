@@ -140,7 +140,7 @@ class $modify(MyEditorUI, EditorUI) {
                 CCPoint oldPos = gameObj->getPosition();
 
                 // Use transformObject with move command (1) and create undo (true)
-                this->transformObject(gameObj, 1, true);
+                this->transformObject(gameObj, EditCommand::SmallUp, true);
 
                 // Apply the actual movement after transform setup
                 CCPoint newPos = CCPoint(oldPos.x, oldPos.y + MOVE_OFFSET);
