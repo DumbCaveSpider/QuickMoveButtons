@@ -54,5 +54,12 @@
 	"links": {
 		"source": "https://github.com/DumbCaveSpider/QuickMoveButtons"
 	},
+	"tags": [
+		"editor",
+		"interface",
+		"enhancement",
+		"offline",
+		"utility"
+	],
 	"description": "Adds move buttons outside the Edit tab."
 }
