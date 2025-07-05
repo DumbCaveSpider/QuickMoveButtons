@@ -33,7 +33,7 @@
 			"description": "Change the opacity of the transform buttons.",
 			"type": "int",
 			"default": 255,
-			"min": 50,
+			"min": 80,
 			"max": 255,
 			"control": {
 				"slider": true,

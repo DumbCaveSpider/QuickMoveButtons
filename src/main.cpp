@@ -914,7 +914,7 @@ class $modify(MyEditorUI, EditorUI) {
         int baseOpacity = Mod::get()->getSettingValue<int>("opacityBtn");
         
         // If dragging, reduce opacity by 30
-        int currentOpacity = m_fields->m_isDragging ? std::max(0, baseOpacity - 30) : baseOpacity;
+        int currentOpacity = m_fields->m_isDragging ? std::max(0, baseOpacity - 50) : baseOpacity;
         
         // Apply the opacity to the entire button menu
         m_fields->m_buttonMenu->setOpacity(currentOpacity);
