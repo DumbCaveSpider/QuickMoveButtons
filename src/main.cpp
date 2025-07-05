@@ -422,6 +422,9 @@ class $modify(MyEditorUI, EditorUI) {
         // Apply scale setting
         updateMenuScale();
 
+        // Apply opacity setting
+        updateMenuOpacity();
+
         // Initialize rotation buttons (will be updated when objects are selected)
         updateRotationButtons();
 
@@ -553,17 +556,19 @@ class $modify(MyEditorUI, EditorUI) {
         this->onMoveTransformCall(EditCommand::FlipY, TransformType::Flip);
     };
 
-    // Check if the current selection contains any solid objects
+    // Check if the current selection contains any solid or slope objects
     bool hasSolidObjects() {
         // Check single selected object
-        if (m_selectedObject && m_selectedObject->m_objectType == GameObjectType::Solid) {
+        if (m_selectedObject && (m_selectedObject->m_objectType == GameObjectType::Solid || 
+                                m_selectedObject->m_objectType == GameObjectType::Slope)) {
             return true;
         }
 
         // Check multiple selected objects
         if (m_selectedObjects && m_selectedObjects->count() > 0) {
             for (auto* obj : CCArrayExt<GameObject*>(m_selectedObjects)) {
-                if (obj && obj->m_objectType == GameObjectType::Solid) {
+                if (obj && (obj->m_objectType == GameObjectType::Solid || 
+                           obj->m_objectType == GameObjectType::Slope)) {
                     return true;
                 }
             }
@@ -703,6 +708,7 @@ class $modify(MyEditorUI, EditorUI) {
             updateButtonMenuVisibility();
             updateButtonBackgroundVisibility(); // Check setting changes
             updateMenuScale(); // Check scale setting changes
+            updateMenuOpacity(); // Check opacity setting changes
             timer = 0.0f;
         };
     };
@@ -802,10 +808,8 @@ class $modify(MyEditorUI, EditorUI) {
                 m_fields->m_isDragging = true;
                 log::info("Started dragging menu from background - distance: {}", distance);
 
-                // Add visual feedback when dragging starts
-                if (m_fields->m_buttonMenu) {
-                    m_fields->m_buttonMenu->setOpacity(180); // More transparent during drag
-                };
+                // Update opacity when dragging starts
+                updateMenuOpacity();
             };
 
             if (m_fields->m_isDragging) {
@@ -843,8 +847,8 @@ class $modify(MyEditorUI, EditorUI) {
             log::info("Saved new menu position: ({}, {})", pos.x, pos.y);
             m_fields->m_isDragging = false;
 
-            // Restore full opacity after dragging
-            if (m_fields->m_buttonMenu) m_fields->m_buttonMenu->setOpacity(255);
+            // Restore opacity after dragging
+            updateMenuOpacity();
         };
 
         // Reset touch tracking
@@ -901,5 +905,18 @@ class $modify(MyEditorUI, EditorUI) {
             // Create button without background - use transparent sprite or no background sprite
             return ButtonSprite::create(text.c_str(), width, absolute, font.c_str(), "square02_small.png", height, scale);
         };
+    };
+
+    void updateMenuOpacity() {
+        if (!m_fields->m_buttonMenu) return;
+
+        // Get the opacity value from settings
+        int baseOpacity = Mod::get()->getSettingValue<int>("opacityBtn");
+        
+        // If dragging, reduce opacity by 30
+        int currentOpacity = m_fields->m_isDragging ? std::max(0, baseOpacity - 30) : baseOpacity;
+        
+        // Apply the opacity to the entire button menu
+        m_fields->m_buttonMenu->setOpacity(currentOpacity);
     };
 };

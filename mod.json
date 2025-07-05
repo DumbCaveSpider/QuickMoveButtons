@@ -27,6 +27,18 @@
 			"description": "Show the background of the transform buttons.",
 			"type": "bool",
 			"default": false
+		},
+		"opacityBtn": {
+			"name": "Button Opacity",
+			"description": "Change the opacity of the transform buttons.",
+			"type": "int",
+			"default": 255,
+			"min": 50,
+			"max": 255,
+			"control": {
+				"slider": true,
+				"slider-step": 5
+			}
 		}
 	},
 	"developers": [
