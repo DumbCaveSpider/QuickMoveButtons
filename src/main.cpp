@@ -92,6 +92,7 @@ class $modify(MyEditorUI, EditorUI) {
         MoveSize moveSize = MoveSize::Small;
 
         CCMenu* m_buttonMenu;
+        CCScale9Sprite* m_buttonMenuBg;
 
         CCMenuItemSpriteExtra* m_moveUpBtn;
         CCMenuItemSpriteExtra* m_moveDownBtn;
@@ -109,33 +110,36 @@ class $modify(MyEditorUI, EditorUI) {
         m_fields->m_buttonMenu->setAnchorPoint({ 0.5f, 0.5f });
         m_fields->m_buttonMenu->setContentSize({ 125.0f, 125.0f });
         m_fields->m_buttonMenu->ignoreAnchorPointForPosition(false);
+        m_fields->m_buttonMenu->setVisible(false); // Initially invisible since no objects are selected
 
         // create visible background for the menu
         auto buttonMenuBg = CCScale9Sprite::create("square02_001.png");
         buttonMenuBg->setContentSize(m_fields->m_buttonMenu->getContentSize());
         buttonMenuBg->ignoreAnchorPointForPosition(false);
         buttonMenuBg->setAnchorPoint({ 0.5, 0.5 });
-        buttonMenuBg->setPosition({ m_fields->m_buttonMenu->getContentWidth() / 2.f, m_fields->m_buttonMenu->getContentHeight() / 2.f });
-
+        buttonMenuBg->setOpacity({10});
+        buttonMenuBg->setPosition({ m_fields->m_buttonMenu->getContentWidth() / 2.f + 35.f, m_fields->m_buttonMenu->getContentHeight() / 2.f + 100.f });
+        buttonMenuBg->setVisible(false); // Initially invisible since no objects are selected
+        
+        m_fields->m_buttonMenuBg = buttonMenuBg;
         m_fields->m_buttonMenu->addChild(buttonMenuBg);
 
         // sprite for all buttons
-        auto moveBtnSprite = CCSprite::createWithSpriteFrameName("GJ_button_01.png");
-        moveBtnSprite->setScale(0.875f);
 
         // btn icon sprite
         auto moveBtnIconSpriteName = "edit_upBtn_001.png";
 
         // create the up btn
+        auto upBtnSprite = ButtonSprite::create("", 20, true, "bigFont.fnt", "GJ_button_01.png", 30, 0.1f);
         m_fields->m_moveUpBtn = CCMenuItemSpriteExtra::create(
-            moveBtnSprite,
+            upBtnSprite,
             this,
             menu_selector(MyEditorUI::onMoveUpButton)
         );
         m_fields->m_moveUpBtn->setID("move-up");
         m_fields->m_moveUpBtn->ignoreAnchorPointForPosition(false);
         m_fields->m_moveUpBtn->setAnchorPoint({ 0.5, 0.5 });
-        m_fields->m_moveUpBtn->setPosition({ m_fields->m_buttonMenu->getContentWidth() / 2.f, (m_fields->m_buttonMenu->getContentHeight() / 2.f) + 25.f });
+        m_fields->m_moveUpBtn->setPosition({ m_fields->m_buttonMenu->getContentWidth() / 2.f, (m_fields->m_buttonMenu->getContentHeight() / 2.f) + 30.f });
 
         // move up button
         auto moveUpBtnIcon = CCSprite::createWithSpriteFrameName(moveBtnIconSpriteName);
@@ -148,15 +152,16 @@ class $modify(MyEditorUI, EditorUI) {
         m_fields->m_buttonMenu->addChild(m_fields->m_moveUpBtn);
 
         // create the down btn
+        auto downBtnSprite = ButtonSprite::create("", 20, true, "bigFont.fnt", "GJ_button_01.png", 30, 0.1f);
         m_fields->m_moveDownBtn = CCMenuItemSpriteExtra::create(
-            moveBtnSprite,
+            downBtnSprite,
             this,
             menu_selector(MyEditorUI::onMoveDownButton)
         );
         m_fields->m_moveDownBtn->setID("move-down");
         m_fields->m_moveDownBtn->ignoreAnchorPointForPosition(false);
         m_fields->m_moveDownBtn->setAnchorPoint({ 0.5, 0.5 });
-        m_fields->m_moveDownBtn->setPosition({ m_fields->m_buttonMenu->getContentWidth() / 2.f, (m_fields->m_buttonMenu->getContentHeight() / 2.f) - 25.f });
+        m_fields->m_moveDownBtn->setPosition({ m_fields->m_buttonMenu->getContentWidth() / 2.f, (m_fields->m_buttonMenu->getContentHeight() / 2.f) - 30.f });
 
         // move down button icon
         auto moveDownBtnIcon = CCSprite::createWithSpriteFrameName(moveBtnIconSpriteName);
@@ -170,15 +175,16 @@ class $modify(MyEditorUI, EditorUI) {
         m_fields->m_buttonMenu->addChild(m_fields->m_moveDownBtn);
 
         // create the left btn
+        auto leftBtnSprite = ButtonSprite::create("", 15, true, "bigFont.fnt", "GJ_button_01.png", 35, 0.2f);
         m_fields->m_moveLeftBtn = CCMenuItemSpriteExtra::create(
-            moveBtnSprite,
+            leftBtnSprite,
             this,
             menu_selector(MyEditorUI::onMoveLeftButton)
         );
         m_fields->m_moveLeftBtn->setID("move-left");
         m_fields->m_moveLeftBtn->ignoreAnchorPointForPosition(false);
         m_fields->m_moveLeftBtn->setAnchorPoint({ 0.5, 0.5 });
-        m_fields->m_moveLeftBtn->setPosition({ (m_fields->m_buttonMenu->getContentWidth() / 2.f) - 25.f, m_fields->m_buttonMenu->getContentHeight() / 2.f });
+        m_fields->m_moveLeftBtn->setPosition({ (m_fields->m_buttonMenu->getContentWidth() / 2.f) - 35.f, m_fields->m_buttonMenu->getContentHeight() / 2.f });
 
         // move left button
         auto moveLeftBtnIcon = CCSprite::createWithSpriteFrameName(moveBtnIconSpriteName);
@@ -186,21 +192,22 @@ class $modify(MyEditorUI, EditorUI) {
         moveLeftBtnIcon->setAnchorPoint({ 0.5, 0.5 });
         moveLeftBtnIcon->ignoreAnchorPointForPosition(false);
         moveLeftBtnIcon->setPosition({ m_fields->m_moveLeftBtn->getContentWidth() / 2.f, m_fields->m_moveLeftBtn->getContentHeight() / 2.f });
-        moveLeftBtnIcon->setRotation(90.f);
+        moveLeftBtnIcon->setRotation(-90.f);
 
         m_fields->m_moveLeftBtn->addChild(moveLeftBtnIcon);
         m_fields->m_buttonMenu->addChild(m_fields->m_moveLeftBtn);
 
         // create the right btn
+        auto rightBtnSprite = ButtonSprite::create("", 15, true, "bigFont.fnt", "GJ_button_01.png", 35, 0.1f);
         m_fields->m_moveRightBtn = CCMenuItemSpriteExtra::create(
-            moveBtnSprite,
+            rightBtnSprite,
             this,
             menu_selector(MyEditorUI::onMoveRightButton)
         );
         m_fields->m_moveRightBtn->setID("move-right");
         m_fields->m_moveRightBtn->ignoreAnchorPointForPosition(false);
         m_fields->m_moveRightBtn->setAnchorPoint({ 0.5, 0.5 });
-        m_fields->m_moveRightBtn->setPosition({ (m_fields->m_buttonMenu->getContentWidth() / 2.f) + 25.f, m_fields->m_buttonMenu->getContentHeight() / 2.f });
+        m_fields->m_moveRightBtn->setPosition({ (m_fields->m_buttonMenu->getContentWidth() / 2.f) + 35.f, m_fields->m_buttonMenu->getContentHeight() / 2.f });
 
         // move right button icon
         auto moveRightBtnIcon = CCSprite::createWithSpriteFrameName("edit_upBtn_001.png");
@@ -208,7 +215,7 @@ class $modify(MyEditorUI, EditorUI) {
         moveRightBtnIcon->setAnchorPoint({ 0.5, 0.5 });
         moveRightBtnIcon->ignoreAnchorPointForPosition(false);
         moveRightBtnIcon->setPosition({ m_fields->m_moveRightBtn->getContentWidth() / 2.f, m_fields->m_moveRightBtn->getContentHeight() / 2.f });
-        moveRightBtnIcon->setRotation(-90.f);
+        moveRightBtnIcon->setRotation(90.f);
 
         m_fields->m_moveRightBtn->addChild(moveRightBtnIcon);
         m_fields->m_buttonMenu->addChild(m_fields->m_moveRightBtn);
@@ -217,14 +224,22 @@ class $modify(MyEditorUI, EditorUI) {
         this->addChild(m_fields->m_buttonMenu);
 
         return true;
+
+        // shocking it aint spagetti code :D
     };
 
     void showUI(bool show) {
         EditorUI::showUI(show);
 
-        if (m_fields->m_buttonMenu) {
-            m_fields->m_buttonMenu->setVisible(show);
-        };
+        // Update visibility when UI is shown/hidden
+        if (show) {
+            updateButtonMenuVisibility();
+        } else {
+            // Hide the menu when UI is hidden
+            if (m_fields->m_buttonMenu) {
+                m_fields->m_buttonMenu->setVisible(false);
+            }
+        }
     };
 
     // Move all objects using the built-in move functionality
@@ -242,8 +257,6 @@ class $modify(MyEditorUI, EditorUI) {
 
         log::info("Using built-in move command: {}", static_cast<int>(editCommand));
 
-        // Use the built-in moveObjectCall function which handles everything including undo
-        // This is the same function used by the built-in move buttons
         this->moveObjectCall(editCommand);
 
         log::info("Successfully executed move command with undo support");
@@ -264,4 +277,73 @@ class $modify(MyEditorUI, EditorUI) {
     void onMoveRightButton(CCObject*) {
         this->onMove(getEditCmd(m_fields->moveSize, MoveDirection::Right), getMoveOffset(m_fields->moveSize));
     };
+
+    void updateButtonMenuVisibility() {
+        if (!m_fields->m_buttonMenu) return;
+        
+        bool hasSelection = false;
+        
+        // Check if there are any selected objects
+        if (m_selectedObjects && m_selectedObjects->count() > 0) {
+            hasSelection = true;
+        } else if (m_selectedObject) {
+            hasSelection = true;
+        }
+        
+        // Only log when visibility actually changes
+        bool currentVisibility = m_fields->m_buttonMenu->isVisible();
+        if (currentVisibility != hasSelection) {
+            m_fields->m_buttonMenu->setVisible(hasSelection);
+            log::info("Quick move menu visibility changed to: {}", hasSelection);
+        }
+    }
+
+    // Override methods that handle object selection to update visibility
+    void selectObject(GameObject* obj, bool filter) {
+        log::info("selectObject called");
+        EditorUI::selectObject(obj, filter);
+        updateButtonMenuVisibility();
+    }
+    
+    void selectObjects(CCArray* objs, bool ignoreFilters) {
+        log::info("selectObjects called");
+        EditorUI::selectObjects(objs, ignoreFilters);
+        updateButtonMenuVisibility();
+    }
+    
+    void deselectAll() {
+        log::info("deselectAll called");
+        EditorUI::deselectAll();
+        updateButtonMenuVisibility();
+    }
+    
+    void deselectObject(GameObject* obj) {
+        log::info("deselectObject called");
+        EditorUI::deselectObject(obj);
+        updateButtonMenuVisibility();
+    }
+
+    void update(float dt) {
+        EditorUI::update(dt);
+        
+        // Periodically check selection state less frequently
+        static float timer = 0.0f;
+        timer += dt;
+        if (timer >= 0.5f) { // Check every 0.5 seconds
+            updateButtonMenuVisibility();
+            timer = 0.0f;
+        }
+    }
+
+    // Override mouse/touch events to catch selection changes
+    bool ccTouchBegan(CCTouch* touch, CCEvent* event) {
+        bool result = EditorUI::ccTouchBegan(touch, event);
+        // Delay the visibility update slightly to let selection complete
+        this->runAction(CCSequence::create(
+            CCDelayTime::create(0.01f),
+            CCCallFunc::create(this, callfunc_selector(MyEditorUI::updateButtonMenuVisibility)),
+            nullptr
+        ));
+        return result;
+    }
 };
