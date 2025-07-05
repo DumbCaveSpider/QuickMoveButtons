@@ -1,8 +1,14 @@
 #include "./QuickMove.hpp"
 
 #include <Geode/Geode.hpp>
-#include <Geode/modify/EditorUI.hpp>
+
+#include <Geode/ui/GeodeUI.hpp>
+
 #include <Geode/utils/NodeIDs.hpp>
+#include <Geode/utils/terminate.hpp>
+
+#include <Geode/modify/EditorUI.hpp>
+#include <Geode/modify/EditorPauseLayer.hpp>
 
 using namespace geode::prelude;
 using namespace quickmove;
@@ -559,23 +565,23 @@ class $modify(MyEditorUI, EditorUI) {
     // Check if the current selection contains any solid or slope objects
     bool hasSolidObjects() {
         // Check single selected object
-        if (m_selectedObject && (m_selectedObject->m_objectType == GameObjectType::Solid || 
-                                m_selectedObject->m_objectType == GameObjectType::Slope)) {
+        if (m_selectedObject && (m_selectedObject->m_objectType == GameObjectType::Solid ||
+                                 m_selectedObject->m_objectType == GameObjectType::Slope)) {
             return true;
-        }
+        };
 
         // Check multiple selected objects
         if (m_selectedObjects && m_selectedObjects->count() > 0) {
             for (auto* obj : CCArrayExt<GameObject*>(m_selectedObjects)) {
-                if (obj && (obj->m_objectType == GameObjectType::Solid || 
-                           obj->m_objectType == GameObjectType::Slope)) {
+                if (obj && (obj->m_objectType == GameObjectType::Solid ||
+                            obj->m_objectType == GameObjectType::Slope)) {
                     return true;
-                }
-            }
-        }
+                };
+            };
+        };
 
         return false;
-    }
+    };
 
     // Update rotation button icons based on selection content
     void updateRotationButtons() {
@@ -596,12 +602,12 @@ class $modify(MyEditorUI, EditorUI) {
         if (clockwiseChildren && clockwiseChildren->count() > 0) {
             // The icon should be the last child (added after the button sprite)
             clockwiseIcon = dynamic_cast<CCSprite*>(clockwiseChildren->lastObject());
-        }
+        };
 
         if (counterClockwiseChildren && counterClockwiseChildren->count() > 0) {
             // The icon should be the last child (added after the button sprite)
             counterClockwiseIcon = dynamic_cast<CCSprite*>(counterClockwiseChildren->lastObject());
-        }
+        };
 
         if (clockwiseIcon && counterClockwiseIcon) {
             // Choose appropriate sprite frames
@@ -615,14 +621,14 @@ class $modify(MyEditorUI, EditorUI) {
             if (clockwiseFrame) {
                 clockwiseIcon->setDisplayFrame(clockwiseFrame);
                 clockwiseIcon->setScale(rotationIconScale);
-            }
+            };
 
             if (counterClockwiseFrame) {
                 counterClockwiseIcon->setDisplayFrame(counterClockwiseFrame);
                 counterClockwiseIcon->setScale(rotationIconScale);
-            }
-        }
-    }
+            };
+        };
+    };
 
     void updateButtonMenuVisibility() {
         if (!m_fields->m_buttonMenu) return;
@@ -643,9 +649,7 @@ class $modify(MyEditorUI, EditorUI) {
         };
 
         // Update rotation buttons when selection changes
-        if (hasSelection) {
-            updateRotationButtons();
-        }
+        if (hasSelection) updateRotationButtons();
     };
 
     void updateButtonBackgroundVisibility() {
@@ -670,7 +674,7 @@ class $modify(MyEditorUI, EditorUI) {
         if (!m_fields->m_buttonMenu) return;
 
         // Get the scale value from settings
-        float scaleValue = Mod::get()->getSettingValue<float>("scale-btn");
+        float scaleValue = Mod::get()->getSettingValue<float>("scale-btns");
 
         // Apply the scale to the entire button menu
         m_fields->m_buttonMenu->setScale(scaleValue);
@@ -911,12 +915,47 @@ class $modify(MyEditorUI, EditorUI) {
         if (!m_fields->m_buttonMenu) return;
 
         // Get the opacity value from settings
-        int baseOpacity = Mod::get()->getSettingValue<int>("opacityBtn");
-        
+        int baseOpacity = Mod::get()->getSettingValue<int>("opacity-btn");
+
         // If dragging, reduce opacity by 30
         int currentOpacity = m_fields->m_isDragging ? std::max(0, baseOpacity - 30) : baseOpacity;
-        
+
         // Apply the opacity to the entire button menu
         m_fields->m_buttonMenu->setOpacity(currentOpacity);
+    };
+};
+
+class $modify(MyEditorPauseLayer, EditorPauseLayer) {
+    bool init(LevelEditorLayer * p0) {
+        if (!EditorPauseLayer::init(p0)) return false;
+
+        auto mod = getMod();
+        auto guidelinesMenu = this->getChildByID("guidelines-menu");
+
+        auto modSettingsBtnSprite = CCSprite::createWithSpriteFrameName("GJ_plainBtn_001.png");
+        modSettingsBtnSprite->setScale(0.875f);
+
+        auto modSettingsBtnSpriteIcon = CCSprite::createWithSpriteFrameName("edit_areaModeBtn04_001.png");
+        modSettingsBtnSpriteIcon->ignoreAnchorPointForPosition(false);
+        modSettingsBtnSpriteIcon->setAnchorPoint({ 0.5, 0.5 });
+        modSettingsBtnSpriteIcon->setPosition({ (modSettingsBtnSprite->getScaledContentWidth() / 2.f) + 2.5f, (modSettingsBtnSprite->getScaledContentHeight() / 2.f) + 2.5f });
+        modSettingsBtnSpriteIcon->setScale(2.f);
+
+        modSettingsBtnSprite->addChild(modSettingsBtnSpriteIcon);
+
+        auto modSettingsBtn = CCMenuItemSpriteExtra::create(
+            modSettingsBtnSprite,
+            this,
+            menu_selector(MyEditorPauseLayer::onQmbModSettings)
+        );
+
+        guidelinesMenu->addChild(modSettingsBtn);
+        guidelinesMenu->updateLayout(true);
+
+        return true;
+    };
+
+    void onQmbModSettings(CCObject*) {
+        openSettingsPopup(getMod());
     };
 };
