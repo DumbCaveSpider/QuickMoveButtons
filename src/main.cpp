@@ -117,6 +117,7 @@ class $modify(MyEditorUI, EditorUI) {
         CCMenu* m_buttonMenu;
         CCScale9Sprite* m_buttonMenuBg;
 
+        // Move buttons
         CCMenuItemSpriteExtra* m_moveUpBtn;
         CCMenuItemSpriteExtra* m_moveDownBtn;
         CCMenuItemSpriteExtra* m_moveLeftBtn;
@@ -181,7 +182,7 @@ class $modify(MyEditorUI, EditorUI) {
         buttonMenuBg->setContentSize(m_fields->m_buttonMenu->getContentSize());
         buttonMenuBg->ignoreAnchorPointForPosition(false);
         buttonMenuBg->setAnchorPoint({ 0.5, 0.5 });
-        buttonMenuBg->setOpacity(50); // Slightly more visible for dragging
+        buttonMenuBg->setOpacity(100); // Slightly more visible for dragging
         buttonMenuBg->setPosition({ m_fields->m_buttonMenu->getContentWidth() / 2.f, m_fields->m_buttonMenu->getContentHeight() / 2.f });
         buttonMenuBg->setVisible(false); // Always invisible
 
