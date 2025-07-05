@@ -24,10 +24,10 @@
 		},
 		"opacity-btn": {
 			"name": "Button Opacity",
-			"description": "Change the opacity of the transform buttons.",
+			"description": "Change the opacity of the transform buttons. This does not affect the background.",
 			"type": "int",
 			"default": 255,
-			"min": 50,
+			"min": 75,
 			"max": 255,
 			"control": {
 				"slider": true,
@@ -37,6 +37,12 @@
 		"visible-bg": {
 			"name": "Button Backgrounds",
 			"description": "Show the background of the transform buttons.",
+			"type": "bool",
+			"default": false
+		},
+		"no-dragging": {
+			"name": "Disable Dragging",
+			"description": "Disable dragging on the transform buttons. Useful if you want your buttons to stay in a fixed position and prevent accidental dragging.",
 			"type": "bool",
 			"default": false
 		}
