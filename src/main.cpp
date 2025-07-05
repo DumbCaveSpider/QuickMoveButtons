@@ -173,7 +173,7 @@ class $modify(MyEditorUI, EditorUI) {
 
         m_fields->m_buttonMenu->setPosition(CCPoint(savedX, savedY));
         m_fields->m_buttonMenu->setAnchorPoint({ 0.5f, 0.5f });
-        m_fields->m_buttonMenu->setContentSize({ 125.0f, 125.0f });
+        m_fields->m_buttonMenu->setContentSize({ 130.0f, 130.0f });
         m_fields->m_buttonMenu->ignoreAnchorPointForPosition(false);
         m_fields->m_buttonMenu->setVisible(false); // Initially invisible since no objects are selected
 
@@ -774,12 +774,15 @@ class $modify(MyEditorUI, EditorUI) {
                     if (btnRect.containsPoint(menuLocal)) onButton = true;
                 };
 
-                // If we're in the menu area but not on any button, we can start dragging
+                // If we're in the menu area but not on any button, we can start dragging (if enabled)
                 if (!onButton) {
-                    touchOnMenuBackground = true;
-                    m_fields->m_touchStartPos = touch->getLocation();
-                    m_fields->m_menuStartPos = m_fields->m_buttonMenu->getPosition();
-                    log::info("Touch began on menu background at ({}, {}), ready for drag detection", m_fields->m_touchStartPos.x, m_fields->m_touchStartPos.y);
+                    bool noDragging = Mod::get()->getSettingValue<bool>("noDragging");
+                    if (!noDragging) {
+                        touchOnMenuBackground = true;
+                        m_fields->m_touchStartPos = touch->getLocation();
+                        m_fields->m_menuStartPos = m_fields->m_buttonMenu->getPosition();
+                        log::info("Touch began on menu background at ({}, {}), ready for drag detection", m_fields->m_touchStartPos.x, m_fields->m_touchStartPos.y);
+                    }
                 };
             };
         };

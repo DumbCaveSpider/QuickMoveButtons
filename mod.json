@@ -28,9 +28,15 @@
 			"type": "bool",
 			"default": false
 		},
+		"noDragging": {
+			"name": "Disable Dragging",
+			"description": "Disable dragging on the transform buttons. Useful if you want your buttons to stay in a fixed position and prevent accidental dragging.",
+			"type": "bool",
+			"default": false
+		},
 		"opacityBtn": {
 			"name": "Button Opacity",
-			"description": "Change the opacity of the transform buttons.",
+			"description": "Change the opacity of the transform buttons. This does not affect the background.",
 			"type": "int",
 			"default": 255,
 			"min": 80,
