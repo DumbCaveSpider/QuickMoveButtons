@@ -786,7 +786,7 @@ class $modify(MyEditorUI, EditorUI) {
                         m_fields->m_touchStartPos = touch->getLocation();
                         m_fields->m_menuStartPos = m_fields->m_buttonMenu->getPosition();
                         log::info("Touch began on menu background at ({}, {}), ready for drag detection", m_fields->m_touchStartPos.x, m_fields->m_touchStartPos.y);
-                    }
+                    };
                 };
             };
         };
