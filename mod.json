@@ -7,8 +7,27 @@
 		"ios": "2.2074"
 	},
 	"id": "arcticwoof.quickmovebuttons",
-	"name": "QuickMoveButtons",
+	"name": "Quick Move Buttons",
 	"version": "v1.0.0",
-	"developer": "ArcticWoof",
-	"description": ""
+	"settings": {
+		"scaleButton": {
+            "name": "Scale Move Button",
+			"description": "Change the size of the move button.",
+            "type": "float",
+            "default": 1,
+            "min": 0.5,
+            "max": 2,
+            "control": {
+                "slider": true
+            }
+		},
+		"visibleButtonBG": {
+			"name": "Button Background",
+			"description": "Show the background of the move buttons.",
+			"type": "bool",
+			"default": false
+		}
+	},
+	"developer": "ArcticWoof, Cheeseworks",
+	"description": "Adds Move buttons outside the Edit Tab."
 }

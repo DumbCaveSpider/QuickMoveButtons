@@ -87,6 +87,42 @@ EditCommand getEditCmd(MoveSize moveSize, MoveDirection moveDir) {
     return EditCommand::SmallUp;
 };
 
+// Get the string name for a move size
+std::string getMoveSizeName(MoveSize moveSize) {
+    switch (moveSize) {
+    case MoveSize::Tiny:
+        return "Tiny";
+    case MoveSize::Small:
+        return "Small";
+    case MoveSize::Half:
+        return "Half";
+    case MoveSize::Normal:
+        return "Normal";
+    case MoveSize::Big:
+        return "Big";
+    default:
+        return "Small";
+    }
+};
+
+// Get the sprite name and scale for arrow icons based on move size
+std::pair<std::string, float> getMoveSizeIconInfo(MoveSize moveSize) {
+    switch (moveSize) {
+    case MoveSize::Tiny:
+        return {"edit_upBtn_001.png", 0.75f};
+    case MoveSize::Small:
+        return {"edit_upBtn_001.png", 0.875f};
+    case MoveSize::Half:
+        return {"edit_upBtn5_001.png", 0.875f};
+    case MoveSize::Normal:
+        return {"edit_upBtn2_001.png", 0.875f};
+    case MoveSize::Big:
+        return {"edit_upBtn3_001.png", 0.875f};
+    default:
+        return {"edit_upBtn_001.png", 0.875f};
+    }
+};
+
 class $modify(MyEditorUI, EditorUI) {
     struct Fields {
         MoveSize moveSize = MoveSize::Small;
@@ -98,6 +134,20 @@ class $modify(MyEditorUI, EditorUI) {
         CCMenuItemSpriteExtra* m_moveDownBtn;
         CCMenuItemSpriteExtra* m_moveLeftBtn;
         CCMenuItemSpriteExtra* m_moveRightBtn;
+        CCMenuItemSpriteExtra* m_moveSizeBtn;
+        
+        // Icon sprites for updating when move size changes
+        CCSprite* m_moveUpIcon;
+        CCSprite* m_moveDownIcon;
+        CCSprite* m_moveLeftIcon;
+        CCSprite* m_moveRightIcon;
+        
+        // Button background sprites for visibility control
+        ButtonSprite* m_moveUpBtnBg;
+        ButtonSprite* m_moveDownBtnBg;
+        ButtonSprite* m_moveLeftBtnBg;
+        ButtonSprite* m_moveRightBtnBg;
+        ButtonSprite* m_moveSizeBtnBg;
     };
 
     bool init(LevelEditorLayer * p0) {
@@ -125,12 +175,14 @@ class $modify(MyEditorUI, EditorUI) {
         m_fields->m_buttonMenu->addChild(buttonMenuBg);
 
         // sprite for all buttons
-
-        // btn icon sprite
-        auto moveBtnIconSpriteName = "edit_upBtn_001.png";
+        // Get current move size icon info
+        auto iconInfo = getMoveSizeIconInfo(m_fields->moveSize);
+        auto moveBtnIconSpriteName = iconInfo.first;
+        auto iconScale = iconInfo.second;
 
         // create the up btn
         auto upBtnSprite = ButtonSprite::create("", 20, true, "bigFont.fnt", "GJ_button_01.png", 30, 0.1f);
+        m_fields->m_moveUpBtnBg = upBtnSprite; // Store reference
         m_fields->m_moveUpBtn = CCMenuItemSpriteExtra::create(
             upBtnSprite,
             this,
@@ -142,17 +194,19 @@ class $modify(MyEditorUI, EditorUI) {
         m_fields->m_moveUpBtn->setPosition({ m_fields->m_buttonMenu->getContentWidth() / 2.f, (m_fields->m_buttonMenu->getContentHeight() / 2.f) + 30.f });
 
         // move up button
-        auto moveUpBtnIcon = CCSprite::createWithSpriteFrameName(moveBtnIconSpriteName);
-        moveUpBtnIcon->setScale(0.875f);
+        auto moveUpBtnIcon = CCSprite::createWithSpriteFrameName(moveBtnIconSpriteName.c_str());
+        moveUpBtnIcon->setScale(iconScale);
         moveUpBtnIcon->setAnchorPoint({ 0.5, 0.5 });
         moveUpBtnIcon->ignoreAnchorPointForPosition(false);
         moveUpBtnIcon->setPosition({ m_fields->m_moveUpBtn->getContentWidth() / 2.f, m_fields->m_moveUpBtn->getContentHeight() / 2.f });
 
+        m_fields->m_moveUpIcon = moveUpBtnIcon; // Store reference
         m_fields->m_moveUpBtn->addChild(moveUpBtnIcon);
         m_fields->m_buttonMenu->addChild(m_fields->m_moveUpBtn);
 
         // create the down btn
         auto downBtnSprite = ButtonSprite::create("", 20, true, "bigFont.fnt", "GJ_button_01.png", 30, 0.1f);
+        m_fields->m_moveDownBtnBg = downBtnSprite; // Store reference
         m_fields->m_moveDownBtn = CCMenuItemSpriteExtra::create(
             downBtnSprite,
             this,
@@ -164,18 +218,20 @@ class $modify(MyEditorUI, EditorUI) {
         m_fields->m_moveDownBtn->setPosition({ m_fields->m_buttonMenu->getContentWidth() / 2.f, (m_fields->m_buttonMenu->getContentHeight() / 2.f) - 30.f });
 
         // move down button icon
-        auto moveDownBtnIcon = CCSprite::createWithSpriteFrameName(moveBtnIconSpriteName);
-        moveDownBtnIcon->setScale(0.875f);
+        auto moveDownBtnIcon = CCSprite::createWithSpriteFrameName(moveBtnIconSpriteName.c_str());
+        moveDownBtnIcon->setScale(iconScale);
         moveDownBtnIcon->setAnchorPoint({ 0.5, 0.5 });
         moveDownBtnIcon->ignoreAnchorPointForPosition(false);
         moveDownBtnIcon->setPosition({ m_fields->m_moveDownBtn->getContentWidth() / 2.f, m_fields->m_moveDownBtn->getContentHeight() / 2.f });
         moveDownBtnIcon->setFlipY(true);
 
+        m_fields->m_moveDownIcon = moveDownBtnIcon; // Store reference
         m_fields->m_moveDownBtn->addChild(moveDownBtnIcon);
         m_fields->m_buttonMenu->addChild(m_fields->m_moveDownBtn);
 
         // create the left btn
         auto leftBtnSprite = ButtonSprite::create("", 15, true, "bigFont.fnt", "GJ_button_01.png", 35, 0.2f);
+        m_fields->m_moveLeftBtnBg = leftBtnSprite; // Store reference
         m_fields->m_moveLeftBtn = CCMenuItemSpriteExtra::create(
             leftBtnSprite,
             this,
@@ -187,18 +243,20 @@ class $modify(MyEditorUI, EditorUI) {
         m_fields->m_moveLeftBtn->setPosition({ (m_fields->m_buttonMenu->getContentWidth() / 2.f) - 35.f, m_fields->m_buttonMenu->getContentHeight() / 2.f });
 
         // move left button
-        auto moveLeftBtnIcon = CCSprite::createWithSpriteFrameName(moveBtnIconSpriteName);
-        moveLeftBtnIcon->setScale(0.875f);
+        auto moveLeftBtnIcon = CCSprite::createWithSpriteFrameName(moveBtnIconSpriteName.c_str());
+        moveLeftBtnIcon->setScale(iconScale);
         moveLeftBtnIcon->setAnchorPoint({ 0.5, 0.5 });
         moveLeftBtnIcon->ignoreAnchorPointForPosition(false);
         moveLeftBtnIcon->setPosition({ m_fields->m_moveLeftBtn->getContentWidth() / 2.f, m_fields->m_moveLeftBtn->getContentHeight() / 2.f });
         moveLeftBtnIcon->setRotation(-90.f);
 
+        m_fields->m_moveLeftIcon = moveLeftBtnIcon; // Store reference
         m_fields->m_moveLeftBtn->addChild(moveLeftBtnIcon);
         m_fields->m_buttonMenu->addChild(m_fields->m_moveLeftBtn);
 
         // create the right btn
         auto rightBtnSprite = ButtonSprite::create("", 15, true, "bigFont.fnt", "GJ_button_01.png", 35, 0.1f);
+        m_fields->m_moveRightBtnBg = rightBtnSprite; // Store reference
         m_fields->m_moveRightBtn = CCMenuItemSpriteExtra::create(
             rightBtnSprite,
             this,
@@ -210,28 +268,51 @@ class $modify(MyEditorUI, EditorUI) {
         m_fields->m_moveRightBtn->setPosition({ (m_fields->m_buttonMenu->getContentWidth() / 2.f) + 35.f, m_fields->m_buttonMenu->getContentHeight() / 2.f });
 
         // move right button icon
-        auto moveRightBtnIcon = CCSprite::createWithSpriteFrameName("edit_upBtn_001.png");
-        moveRightBtnIcon->setScale(0.875f);
+        auto moveRightBtnIcon = CCSprite::createWithSpriteFrameName(moveBtnIconSpriteName.c_str());
+        moveRightBtnIcon->setScale(iconScale);
         moveRightBtnIcon->setAnchorPoint({ 0.5, 0.5 });
         moveRightBtnIcon->ignoreAnchorPointForPosition(false);
         moveRightBtnIcon->setPosition({ m_fields->m_moveRightBtn->getContentWidth() / 2.f, m_fields->m_moveRightBtn->getContentHeight() / 2.f });
         moveRightBtnIcon->setRotation(90.f);
 
+        m_fields->m_moveRightIcon = moveRightBtnIcon; // Store reference
         m_fields->m_moveRightBtn->addChild(moveRightBtnIcon);
         m_fields->m_buttonMenu->addChild(m_fields->m_moveRightBtn);
+
+        // create the move size selector button (center)
+        auto sizeBtnSprite = CCSprite::createWithSpriteFrameName("gj_navDotBtn_off_001.png");
+        m_fields->m_moveSizeBtnBg = nullptr; // No ButtonSprite background for simple sprite
+        m_fields->m_moveSizeBtn = CCMenuItemSpriteExtra::create(
+            sizeBtnSprite,
+            this,
+            menu_selector(MyEditorUI::onMoveSizeButton)
+        );
+        m_fields->m_moveSizeBtn->setID("move-size");
+        m_fields->m_moveSizeBtn->ignoreAnchorPointForPosition(false);
+        m_fields->m_moveSizeBtn->setAnchorPoint({ 0.5, 0.5 });
+        m_fields->m_moveSizeBtn->setPosition({ m_fields->m_buttonMenu->getContentWidth() / 2.f, m_fields->m_buttonMenu->getContentHeight() / 2.f });
+
+        m_fields->m_buttonMenu->addChild(m_fields->m_moveSizeBtn);
 
         // add the whole menu
         this->addChild(m_fields->m_buttonMenu);
 
+        // Apply button background visibility setting
+        updateButtonBackgroundVisibility();
+        
+        // Apply scale setting
+        updateMenuScale();
+
         return true;
 
         // shocking it aint spagetti code :D
+        // see cheese i made u proud with my amazing dumb coding skills
     };
 
     void showUI(bool show) {
         EditorUI::showUI(show);
 
-        // Update visibility when UI is shown/hidden
+        // Update visibility when UI is shown/hidden (took this from better edit or something)
         if (show) {
             updateButtonMenuVisibility();
         } else {
@@ -242,7 +323,7 @@ class $modify(MyEditorUI, EditorUI) {
         }
     };
 
-    // Move all objects using the built-in move functionality
+    // move objects using the editcommand thingy
     void onMove(EditCommand editCommand, float MOVE_OFFSET) {
         if (!m_editorLayer) {
             log::error("No editor layer found");
@@ -257,10 +338,11 @@ class $modify(MyEditorUI, EditorUI) {
 
         log::info("Using built-in move command: {}", static_cast<int>(editCommand));
 
+        // move object :)
         this->moveObjectCall(editCommand);
-
-        log::info("Successfully executed move command with undo support");
     };
+
+    // hmmmm buttons my beloved
 
     void onMoveUpButton(CCObject*) {
         this->onMove(getEditCmd(m_fields->moveSize, MoveDirection::Up), getMoveOffset(m_fields->moveSize));
@@ -276,6 +358,46 @@ class $modify(MyEditorUI, EditorUI) {
 
     void onMoveRightButton(CCObject*) {
         this->onMove(getEditCmd(m_fields->moveSize, MoveDirection::Right), getMoveOffset(m_fields->moveSize));
+    };
+
+    // i was gonna do if else statement but after learning about my c lessons in uni about switch statements, i use this :D
+
+    void onMoveSizeButton(CCObject*) {
+        // Cycle through move sizes
+        switch (m_fields->moveSize) {
+        case MoveSize::Tiny:
+            m_fields->moveSize = MoveSize::Small;
+            break;
+        case MoveSize::Small:
+            m_fields->moveSize = MoveSize::Half;
+            break;
+        case MoveSize::Half:
+            m_fields->moveSize = MoveSize::Normal;
+            break;
+        case MoveSize::Normal:
+            m_fields->moveSize = MoveSize::Big;
+            break;
+        case MoveSize::Big:
+            m_fields->moveSize = MoveSize::Tiny;
+            break;
+        default:
+            m_fields->moveSize = MoveSize::Small;
+            break;
+        }
+        
+        // Update the button text
+        updateMoveSizeButtonText();
+        
+        // Update arrow icons
+        updateArrowIcons();
+        
+        log::info("Move size changed to: {}", getMoveSizeName(m_fields->moveSize));
+    };
+
+    void updateMoveSizeButtonText() {
+        // No longer needed since we use a simple dot sprite instead of text
+        // The dot sprite remains constant regardless of move size
+        return;
     };
 
     void updateButtonMenuVisibility() {
@@ -294,31 +416,56 @@ class $modify(MyEditorUI, EditorUI) {
         bool currentVisibility = m_fields->m_buttonMenu->isVisible();
         if (currentVisibility != hasSelection) {
             m_fields->m_buttonMenu->setVisible(hasSelection);
-            log::info("Quick move menu visibility changed to: {}", hasSelection);
         }
     }
 
+    void updateButtonBackgroundVisibility() {
+        bool showButtonBG = Mod::get()->getSettingValue<bool>("visibleButtonBG");
+        
+        // good idea to use the buttonsprite, way better than using CCMenuItemSpriteExtra :)
+        // also if statement wall
+        if (m_fields->m_moveUpBtnBg) {
+            m_fields->m_moveUpBtnBg->setVisible(showButtonBG);
+        }
+        if (m_fields->m_moveDownBtnBg) {
+            m_fields->m_moveDownBtnBg->setVisible(showButtonBG);
+        }
+        if (m_fields->m_moveLeftBtnBg) {
+            m_fields->m_moveLeftBtnBg->setVisible(showButtonBG);
+        }
+        if (m_fields->m_moveRightBtnBg) {
+            m_fields->m_moveRightBtnBg->setVisible(showButtonBG);
+        }
+        // Note: m_moveSizeBtnBg is now nullptr since we use a simple sprite instead of ButtonSprite
+    };
+
+    void updateMenuScale() {
+        if (!m_fields->m_buttonMenu) return;
+        
+        // Get the scale value from settings
+        float scaleValue = Mod::get()->getSettingValue<float>("scaleButton");
+        
+        // Apply the scale to the entire button menu
+        m_fields->m_buttonMenu->setScale(scaleValue);
+    };
+
     // Override methods that handle object selection to update visibility
     void selectObject(GameObject* obj, bool filter) {
-        log::info("selectObject called");
         EditorUI::selectObject(obj, filter);
         updateButtonMenuVisibility();
     }
     
     void selectObjects(CCArray* objs, bool ignoreFilters) {
-        log::info("selectObjects called");
         EditorUI::selectObjects(objs, ignoreFilters);
         updateButtonMenuVisibility();
     }
     
     void deselectAll() {
-        log::info("deselectAll called");
         EditorUI::deselectAll();
         updateButtonMenuVisibility();
     }
     
     void deselectObject(GameObject* obj) {
-        log::info("deselectObject called");
         EditorUI::deselectObject(obj);
         updateButtonMenuVisibility();
     }
@@ -326,11 +473,13 @@ class $modify(MyEditorUI, EditorUI) {
     void update(float dt) {
         EditorUI::update(dt);
         
-        // Periodically check selection state less frequently
+        // Periodically check selection state and settings
         static float timer = 0.0f;
         timer += dt;
         if (timer >= 0.5f) { // Check every 0.5 seconds
             updateButtonMenuVisibility();
+            updateButtonBackgroundVisibility(); // Check setting changes
+            updateMenuScale(); // Check scale setting changes
             timer = 0.0f;
         }
     }
@@ -345,5 +494,54 @@ class $modify(MyEditorUI, EditorUI) {
             nullptr
         ));
         return result;
+    }
+
+    void updateArrowIcons() {
+        if (!m_fields->m_moveUpIcon || !m_fields->m_moveDownIcon || 
+            !m_fields->m_moveLeftIcon || !m_fields->m_moveRightIcon) return;
+        
+        auto iconInfo = getMoveSizeIconInfo(m_fields->moveSize);
+        auto newSpriteName = iconInfo.first;
+        auto newScale = iconInfo.second;
+        
+        // Update up arrow
+        auto newFrame = CCSpriteFrameCache::sharedSpriteFrameCache()->spriteFrameByName(newSpriteName.c_str());
+        if (newFrame) {
+            m_fields->m_moveUpIcon->setDisplayFrame(newFrame);
+            m_fields->m_moveUpIcon->setScale(newScale);
+        }
+        
+        // Update down arrow
+        if (newFrame) {
+            m_fields->m_moveDownIcon->setDisplayFrame(newFrame);
+            m_fields->m_moveDownIcon->setScale(newScale);
+            m_fields->m_moveDownIcon->setFlipY(true); // Keep flipped
+        }
+        
+        // Update left arrow
+        if (newFrame) {
+            m_fields->m_moveLeftIcon->setDisplayFrame(newFrame);
+            m_fields->m_moveLeftIcon->setScale(newScale);
+            m_fields->m_moveLeftIcon->setRotation(-90.f); // Keep rotated
+        }
+        
+        // Update right arrow
+        if (newFrame) {
+            m_fields->m_moveRightIcon->setDisplayFrame(newFrame);
+            m_fields->m_moveRightIcon->setScale(newScale);
+            m_fields->m_moveRightIcon->setRotation(90.f); // Keep rotated
+        }
+    };
+
+    // Create button sprite based on settings
+    ButtonSprite* createMoveButtonSprite(const std::string& text = "", int width = 20, bool absolute = true, const std::string& font = "bigFont.fnt", int height = 30, float scale = 0.1f) {
+        bool showButtonBG = Mod::get()->getSettingValue<bool>("visibleButtonBG");
+        
+        if (showButtonBG) {
+            return ButtonSprite::create(text.c_str(), width, absolute, font.c_str(), "GJ_button_01.png", height, scale);
+        } else {
+            // Create button without background - use transparent sprite or no background sprite
+            return ButtonSprite::create(text.c_str(), width, absolute, font.c_str(), "square02_small.png", height, scale);
+        }
     }
 };
