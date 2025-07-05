@@ -422,6 +422,9 @@ class $modify(MyEditorUI, EditorUI) {
         // Apply scale setting
         updateMenuScale();
 
+        // Initialize rotation buttons (will be updated when objects are selected)
+        updateRotationButtons();
+
         return true;
 
         // shocking it aint spagetti code :D
@@ -520,17 +523,24 @@ class $modify(MyEditorUI, EditorUI) {
         // Update arrow icons
         updateArrowIcons();
 
+        // Update rotation buttons in case scale changed
+        updateRotationButtons();
+
         log::info("Move size changed to: {}", getMoveSizeName(m_fields->moveSize));
     };
 
     // rotate buttons
 
     void onRotateCounterClockwiseButton(CCObject*) {
-        this->onMoveTransformCall(EditCommand::RotateCCW45, TransformType::Rotate);
+        bool hasSolid = hasSolidObjects();
+        EditCommand rotateCmd = hasSolid ? EditCommand::RotateCCW : EditCommand::RotateCCW45;
+        this->onMoveTransformCall(rotateCmd, TransformType::Rotate);
     };
 
     void onRotateClockwiseButton(CCObject*) {
-        this->onMoveTransformCall(EditCommand::RotateCW45, TransformType::Rotate);
+        bool hasSolid = hasSolidObjects();
+        EditCommand rotateCmd = hasSolid ? EditCommand::RotateCW : EditCommand::RotateCW45;
+        this->onMoveTransformCall(rotateCmd, TransformType::Rotate);
     };
 
     // flip buttons
@@ -542,6 +552,72 @@ class $modify(MyEditorUI, EditorUI) {
     void onFlipYButton(CCObject*) {
         this->onMoveTransformCall(EditCommand::FlipY, TransformType::Flip);
     };
+
+    // Check if the current selection contains any solid objects
+    bool hasSolidObjects() {
+        // Check single selected object
+        if (m_selectedObject && m_selectedObject->m_objectType == GameObjectType::Solid) {
+            return true;
+        }
+
+        // Check multiple selected objects
+        if (m_selectedObjects && m_selectedObjects->count() > 0) {
+            for (auto* obj : CCArrayExt<GameObject*>(m_selectedObjects)) {
+                if (obj && obj->m_objectType == GameObjectType::Solid) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    // Update rotation button icons based on selection content
+    void updateRotationButtons() {
+        if (!m_fields->m_rotateClockwiseBtn || !m_fields->m_rotateCounterClockwiseBtn) return;
+
+        bool hasSolid = hasSolidObjects();
+        // Rotation icons should always use default scale (1.0f), not scale with move size
+        float rotationIconScale = 1.0f;
+
+        // Get the existing icons - they should be the last child added to each button
+        CCSprite* clockwiseIcon = nullptr;
+        CCSprite* counterClockwiseIcon = nullptr;
+
+        // Find the icon sprites in the buttons
+        auto clockwiseChildren = m_fields->m_rotateClockwiseBtn->getChildren();
+        auto counterClockwiseChildren = m_fields->m_rotateCounterClockwiseBtn->getChildren();
+
+        if (clockwiseChildren && clockwiseChildren->count() > 0) {
+            // The icon should be the last child (added after the button sprite)
+            clockwiseIcon = dynamic_cast<CCSprite*>(clockwiseChildren->lastObject());
+        }
+
+        if (counterClockwiseChildren && counterClockwiseChildren->count() > 0) {
+            // The icon should be the last child (added after the button sprite)
+            counterClockwiseIcon = dynamic_cast<CCSprite*>(counterClockwiseChildren->lastObject());
+        }
+
+        if (clockwiseIcon && counterClockwiseIcon) {
+            // Choose appropriate sprite frames
+            const char* clockwiseSprite = hasSolid ? "edit_cwBtn_001.png" : "edit_rotate45rBtn_001.png";
+            const char* counterClockwiseSprite = hasSolid ? "edit_ccwBtn_001.png" : "edit_rotate45lBtn_001.png";
+
+            // Update sprites
+            auto clockwiseFrame = CCSpriteFrameCache::sharedSpriteFrameCache()->spriteFrameByName(clockwiseSprite);
+            auto counterClockwiseFrame = CCSpriteFrameCache::sharedSpriteFrameCache()->spriteFrameByName(counterClockwiseSprite);
+
+            if (clockwiseFrame) {
+                clockwiseIcon->setDisplayFrame(clockwiseFrame);
+                clockwiseIcon->setScale(rotationIconScale);
+            }
+
+            if (counterClockwiseFrame) {
+                counterClockwiseIcon->setDisplayFrame(counterClockwiseFrame);
+                counterClockwiseIcon->setScale(rotationIconScale);
+            }
+        }
+    }
 
     void updateButtonMenuVisibility() {
         if (!m_fields->m_buttonMenu) return;
@@ -560,6 +636,11 @@ class $modify(MyEditorUI, EditorUI) {
         if (currentVisibility != hasSelection) {
             m_fields->m_buttonMenu->setVisible(hasSelection);
         };
+
+        // Update rotation buttons when selection changes
+        if (hasSelection) {
+            updateRotationButtons();
+        }
     };
 
     void updateButtonBackgroundVisibility() {
