@@ -136,6 +136,14 @@ class $modify(MyEditorUI, EditorUI) {
         CCMenuItemSpriteExtra* m_moveRightBtn;
         CCMenuItemSpriteExtra* m_moveSizeBtn;
         
+        // Rotation buttons (next to up arrow)
+        CCMenuItemSpriteExtra* m_rotateClockwiseBtn;
+        CCMenuItemSpriteExtra* m_rotateCounterClockwiseBtn;
+        
+        // Flip buttons (next to down arrow)
+        CCMenuItemSpriteExtra* m_flipHorizontalBtn;
+        CCMenuItemSpriteExtra* m_flipVerticalBtn;
+        
         // Icon sprites for updating when move size changes
         CCSprite* m_moveUpIcon;
         CCSprite* m_moveDownIcon;
@@ -148,6 +156,15 @@ class $modify(MyEditorUI, EditorUI) {
         ButtonSprite* m_moveLeftBtnBg;
         ButtonSprite* m_moveRightBtnBg;
         ButtonSprite* m_moveSizeBtnBg;
+        ButtonSprite* m_rotateClockwiseBtnBg;
+        ButtonSprite* m_rotateCounterClockwiseBtnBg;
+        ButtonSprite* m_flipHorizontalBtnBg;
+        ButtonSprite* m_flipVerticalBtnBg;
+        
+        // Dragging functionality
+        bool m_isDragging = false;
+        CCPoint m_touchStartPos;
+        CCPoint m_menuStartPos;
     };
 
     bool init(LevelEditorLayer * p0) {
@@ -156,7 +173,11 @@ class $modify(MyEditorUI, EditorUI) {
         // create menu for the buttons
         m_fields->m_buttonMenu = CCMenu::create();
         m_fields->m_buttonMenu->setID("quick-move-menu"_spr);
-        m_fields->m_buttonMenu->setPosition({ 315.0f, 125.0f });
+        
+        // Get saved position or use center of screen as default
+        float savedX = Mod::get()->getSavedValue<float>("menuPositionX", CCDirector::sharedDirector()->getWinSize().width / 2);
+        float savedY = Mod::get()->getSavedValue<float>("menuPositionY", CCDirector::sharedDirector()->getWinSize().height / 2);
+        m_fields->m_buttonMenu->setPosition(CCPoint(savedX, savedY));
         m_fields->m_buttonMenu->setAnchorPoint({ 0.5f, 0.5f });
         m_fields->m_buttonMenu->setContentSize({ 125.0f, 125.0f });
         m_fields->m_buttonMenu->ignoreAnchorPointForPosition(false);
@@ -167,9 +188,9 @@ class $modify(MyEditorUI, EditorUI) {
         buttonMenuBg->setContentSize(m_fields->m_buttonMenu->getContentSize());
         buttonMenuBg->ignoreAnchorPointForPosition(false);
         buttonMenuBg->setAnchorPoint({ 0.5, 0.5 });
-        buttonMenuBg->setOpacity({10});
-        buttonMenuBg->setPosition({ m_fields->m_buttonMenu->getContentWidth() / 2.f + 35.f, m_fields->m_buttonMenu->getContentHeight() / 2.f + 100.f });
-        buttonMenuBg->setVisible(false); // Initially invisible since no objects are selected
+        buttonMenuBg->setOpacity({30}); // Slightly more visible for dragging
+        buttonMenuBg->setPosition({ m_fields->m_buttonMenu->getContentWidth() / 2.f, m_fields->m_buttonMenu->getContentHeight() / 2.f });
+        buttonMenuBg->setVisible(false); // Always invisible
         
         m_fields->m_buttonMenuBg = buttonMenuBg;
         m_fields->m_buttonMenu->addChild(buttonMenuBg);
@@ -279,7 +300,7 @@ class $modify(MyEditorUI, EditorUI) {
         m_fields->m_moveRightBtn->addChild(moveRightBtnIcon);
         m_fields->m_buttonMenu->addChild(m_fields->m_moveRightBtn);
 
-        // create the move size selector button (center)
+        // create the move size selector button (center) - draggable via touch handling
         auto sizeBtnSprite = CCSprite::createWithSpriteFrameName("gj_navDotBtn_off_001.png");
         m_fields->m_moveSizeBtnBg = nullptr; // No ButtonSprite background for simple sprite
         m_fields->m_moveSizeBtn = CCMenuItemSpriteExtra::create(
@@ -484,9 +505,75 @@ class $modify(MyEditorUI, EditorUI) {
         }
     }
 
-    // Override mouse/touch events to catch selection changes
+    // Override mouse/touch events to catch selection changes and handle dragging
     bool ccTouchBegan(CCTouch* touch, CCEvent* event) {
+        // Reset dragging state
+        m_fields->m_isDragging = false;
+        m_fields->m_touchStartPos = CCPoint(0, 0);
+        
+        // Check if touch is on the menu background area (but not on any buttons)
+        bool touchOnMenuBackground = false;
+        if (m_fields->m_buttonMenu && m_fields->m_buttonMenu->isVisible()) {
+            // Convert touch to the menu's coordinate space
+            CCPoint menuLocal = m_fields->m_buttonMenu->convertTouchToNodeSpace(touch);
+            CCSize menuSize = m_fields->m_buttonMenu->getContentSize();
+            
+            // Check if touch is within the menu bounds
+            CCRect menuRect = CCRect(0, 0, menuSize.width, menuSize.height);
+            
+            if (menuRect.containsPoint(menuLocal)) {
+                // Now check if it's NOT on any of the buttons
+                bool onButton = false;
+                
+                // Check all directional buttons
+                if (m_fields->m_moveUpBtn && m_fields->m_moveUpBtn->isVisible()) {
+                    CCPoint btnPos = m_fields->m_moveUpBtn->getPosition();
+                    CCSize btnSize = m_fields->m_moveUpBtn->getContentSize();
+                    CCRect btnRect = CCRect(btnPos.x - btnSize.width/2, btnPos.y - btnSize.height/2, btnSize.width, btnSize.height);
+                    if (btnRect.containsPoint(menuLocal)) onButton = true;
+                }
+                
+                if (!onButton && m_fields->m_moveDownBtn && m_fields->m_moveDownBtn->isVisible()) {
+                    CCPoint btnPos = m_fields->m_moveDownBtn->getPosition();
+                    CCSize btnSize = m_fields->m_moveDownBtn->getContentSize();
+                    CCRect btnRect = CCRect(btnPos.x - btnSize.width/2, btnPos.y - btnSize.height/2, btnSize.width, btnSize.height);
+                    if (btnRect.containsPoint(menuLocal)) onButton = true;
+                }
+                
+                if (!onButton && m_fields->m_moveLeftBtn && m_fields->m_moveLeftBtn->isVisible()) {
+                    CCPoint btnPos = m_fields->m_moveLeftBtn->getPosition();
+                    CCSize btnSize = m_fields->m_moveLeftBtn->getContentSize();
+                    CCRect btnRect = CCRect(btnPos.x - btnSize.width/2, btnPos.y - btnSize.height/2, btnSize.width, btnSize.height);
+                    if (btnRect.containsPoint(menuLocal)) onButton = true;
+                }
+                
+                if (!onButton && m_fields->m_moveRightBtn && m_fields->m_moveRightBtn->isVisible()) {
+                    CCPoint btnPos = m_fields->m_moveRightBtn->getPosition();
+                    CCSize btnSize = m_fields->m_moveRightBtn->getContentSize();
+                    CCRect btnRect = CCRect(btnPos.x - btnSize.width/2, btnPos.y - btnSize.height/2, btnSize.width, btnSize.height);
+                    if (btnRect.containsPoint(menuLocal)) onButton = true;
+                }
+                
+                if (!onButton && m_fields->m_moveSizeBtn && m_fields->m_moveSizeBtn->isVisible()) {
+                    CCPoint btnPos = m_fields->m_moveSizeBtn->getPosition();
+                    CCSize btnSize = m_fields->m_moveSizeBtn->getContentSize();
+                    CCRect btnRect = CCRect(btnPos.x - btnSize.width/2, btnPos.y - btnSize.height/2, btnSize.width, btnSize.height);
+                    if (btnRect.containsPoint(menuLocal)) onButton = true;
+                }
+                
+                // If we're in the menu area but not on any button, we can start dragging
+                if (!onButton) {
+                    touchOnMenuBackground = true;
+                    m_fields->m_touchStartPos = touch->getLocation();
+                    m_fields->m_menuStartPos = m_fields->m_buttonMenu->getPosition();
+                    log::info("Touch began on menu background at ({}, {}), ready for drag detection", m_fields->m_touchStartPos.x, m_fields->m_touchStartPos.y);
+                }
+            }
+        }
+        
+        // Call parent for normal touch handling
         bool result = EditorUI::ccTouchBegan(touch, event);
+        
         // Delay the visibility update slightly to let selection complete
         this->runAction(CCSequence::create(
             CCDelayTime::create(0.01f),
@@ -494,6 +581,68 @@ class $modify(MyEditorUI, EditorUI) {
             nullptr
         ));
         return result;
+    }
+    
+    void ccTouchMoved(CCTouch* touch, CCEvent* event) {
+        // Handle dragging if we started on the menu background
+        if (m_fields->m_touchStartPos.x != 0 || m_fields->m_touchStartPos.y != 0) {
+            CCPoint currentPos = touch->getLocation();
+            float distance = ccpDistance(currentPos, m_fields->m_touchStartPos);
+            
+            // Start dragging if moved more than 5 pixels (responsive)
+            if (!m_fields->m_isDragging && distance > 5.0f) {
+                m_fields->m_isDragging = true;
+                log::info("Started dragging menu from background - distance: {}", distance);
+                
+                // Add visual feedback when dragging starts
+                if (m_fields->m_buttonMenu) {
+                    m_fields->m_buttonMenu->setOpacity(180); // More transparent during drag
+                }
+            }
+            
+            if (m_fields->m_isDragging) {
+                CCPoint delta = ccpSub(currentPos, m_fields->m_touchStartPos);
+                CCPoint newPos = ccpAdd(m_fields->m_menuStartPos, delta);
+                
+                // Constrain position to screen bounds
+                auto winSize = CCDirector::sharedDirector()->getWinSize();
+                float menuHalfWidth = 65.0f; // Account for scaled buttons
+                float menuHalfHeight = 65.0f;
+                
+                newPos.x = std::max(menuHalfWidth, std::min(winSize.width - menuHalfWidth, newPos.x));
+                newPos.y = std::max(menuHalfHeight, std::min(winSize.height - menuHalfHeight, newPos.y));
+                
+                m_fields->m_buttonMenu->setPosition(newPos);
+                return; // Don't call parent if we're dragging
+            }
+        }
+        
+        EditorUI::ccTouchMoved(touch, event);
+    }
+    
+    void ccTouchEnded(CCTouch* touch, CCEvent* event) {
+        bool wasDragging = m_fields->m_isDragging;
+        bool hadTouchStart = (m_fields->m_touchStartPos.x != 0 || m_fields->m_touchStartPos.y != 0);
+        
+        if (m_fields->m_isDragging) {
+            // Save the new position
+            CCPoint pos = m_fields->m_buttonMenu->getPosition();
+            Mod::get()->setSavedValue("menuPositionX", pos.x);
+            Mod::get()->setSavedValue("menuPositionY", pos.y);
+            log::info("Saved new menu position: ({}, {})", pos.x, pos.y);
+            m_fields->m_isDragging = false;
+            
+            // Restore full opacity after dragging
+            if (m_fields->m_buttonMenu) {
+                m_fields->m_buttonMenu->setOpacity(255);
+            }
+        }
+        
+        // Reset touch tracking
+        m_fields->m_touchStartPos = CCPoint(0, 0);
+        
+        // Always call parent to ensure proper cleanup
+        EditorUI::ccTouchEnded(touch, event);
     }
 
     void updateArrowIcons() {
