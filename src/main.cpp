@@ -129,8 +129,8 @@ class $modify(MyEditorUI, EditorUI) {
         CCMenuItemSpriteExtra* m_rotateCounterClockwiseBtn;
 
         // Flip buttons (next to down arrow)
-        CCMenuItemSpriteExtra* m_flipHorizontalBtn;
-        CCMenuItemSpriteExtra* m_flipVerticalBtn;
+        CCMenuItemSpriteExtra* m_flipXBtn;
+        CCMenuItemSpriteExtra* m_flipYBtn;
 
         // Icon sprites for updating when move size changes
         CCSprite* m_moveUpIcon;
@@ -149,8 +149,8 @@ class $modify(MyEditorUI, EditorUI) {
         ButtonSprite* m_rotateClockwiseBtnBg;
         ButtonSprite* m_rotateCounterClockwiseBtnBg;
 
-        ButtonSprite* m_flipHorizontalBtnBg;
-        ButtonSprite* m_flipVerticalBtnBg;
+        ButtonSprite* m_flipXBtnBg;
+        ButtonSprite* m_flipYBtnBg;
 
         // Dragging functionality
         bool m_isDragging = false;
@@ -317,13 +317,13 @@ class $modify(MyEditorUI, EditorUI) {
         m_fields->m_buttonMenu->addChild(m_fields->m_moveSizeBtn);
 
         // create rotate counter clockwise button
-        auto rotateCounterClockwiseSprite = ButtonSprite::create("", 15, true, "bigFont.fnt", "GJ_button_01.png", 35.f, 0.1f);
+        auto rotateCounterClockwiseSprite = ButtonSprite::create("", 15, true, "bigFont.fnt", "GJ_button_01.png", 32.5f, 0.1f);
         m_fields->m_rotateCounterClockwiseBtnBg = rotateCounterClockwiseSprite;
 
         m_fields->m_rotateCounterClockwiseBtn = CCMenuItemSpriteExtra::create(
             rotateCounterClockwiseSprite,
             this,
-            menu_selector(MyEditorUI::onMoveSizeButton) // will add function
+            menu_selector(MyEditorUI::onRotateCounterClockwiseButton)
         );
         m_fields->m_rotateCounterClockwiseBtn->setID("rotate-counter-clockwise");
         m_fields->m_rotateCounterClockwiseBtn->ignoreAnchorPointForPosition(false);
@@ -341,13 +341,13 @@ class $modify(MyEditorUI, EditorUI) {
         m_fields->m_buttonMenu->addChild(m_fields->m_rotateCounterClockwiseBtn);
 
         // create rotate clockwise button
-        auto rotateClockwiseSprite = ButtonSprite::create("", 15, true, "bigFont.fnt", "GJ_button_01.png", 35.f, 0.1f);
+        auto rotateClockwiseSprite = ButtonSprite::create("", 15, true, "bigFont.fnt", "GJ_button_01.png", 32.5f, 0.1f);
         m_fields->m_rotateClockwiseBtnBg = rotateClockwiseSprite;
 
         m_fields->m_rotateClockwiseBtn = CCMenuItemSpriteExtra::create(
             rotateClockwiseSprite,
             this,
-            menu_selector(MyEditorUI::onMoveSizeButton) // will add function
+            menu_selector(MyEditorUI::onRotateClockwiseButton) // will add function
         );
         m_fields->m_rotateClockwiseBtn->setID("rotate-clockwise");
         m_fields->m_rotateClockwiseBtn->ignoreAnchorPointForPosition(false);
@@ -363,6 +363,54 @@ class $modify(MyEditorUI, EditorUI) {
 
         m_fields->m_rotateClockwiseBtn->addChild(rotateClockwiseBtnIcon);
         m_fields->m_buttonMenu->addChild(m_fields->m_rotateClockwiseBtn);
+
+        // create flip x button
+        auto flipXSprite = ButtonSprite::create("", 15, true, "bigFont.fnt", "GJ_button_01.png", 32.5f, 0.1f);
+        m_fields->m_flipXBtnBg = flipXSprite;
+
+        m_fields->m_flipXBtn = CCMenuItemSpriteExtra::create(
+            flipXSprite,
+            this,
+            menu_selector(MyEditorUI::onFlipXButton) // will add function
+        );
+        m_fields->m_flipXBtn->setID("flip-x");
+        m_fields->m_flipXBtn->ignoreAnchorPointForPosition(false);
+        m_fields->m_flipXBtn->setAnchorPoint({ 0.5, 0.5 });
+        m_fields->m_flipXBtn->setPosition({ (m_fields->m_buttonMenu->getContentWidth() / 2.f) - 40.f, (m_fields->m_buttonMenu->getContentHeight() / 2.f) - 40.f });
+
+        // flip x button icon
+        auto flipXBtnIcon = CCSprite::createWithSpriteFrameName("edit_flipXBtn_001.png");
+        flipXBtnIcon->setScale(iconScale);
+        flipXBtnIcon->setAnchorPoint({ 0.5, 0.5 });
+        flipXBtnIcon->ignoreAnchorPointForPosition(false);
+        flipXBtnIcon->setPosition({ m_fields->m_flipXBtn->getContentWidth() / 2.f, m_fields->m_flipXBtn->getContentHeight() / 2.f });
+
+        m_fields->m_flipXBtn->addChild(flipXBtnIcon);
+        m_fields->m_buttonMenu->addChild(m_fields->m_flipXBtn);
+
+        // create flip y button
+        auto flipYSprite = ButtonSprite::create("", 15, true, "bigFont.fnt", "GJ_button_01.png", 32.5f, 0.1f);
+        m_fields->m_flipYBtnBg = flipYSprite;
+
+        m_fields->m_flipYBtn = CCMenuItemSpriteExtra::create(
+            flipYSprite,
+            this,
+            menu_selector(MyEditorUI::onFlipYButton) // will add function
+        );
+        m_fields->m_flipYBtn->setID("flip-y");
+        m_fields->m_flipYBtn->ignoreAnchorPointForPosition(false);
+        m_fields->m_flipYBtn->setAnchorPoint({ 0.5, 0.5 });
+        m_fields->m_flipYBtn->setPosition({ (m_fields->m_buttonMenu->getContentWidth() / 2.f) + 40.f, (m_fields->m_buttonMenu->getContentHeight() / 2.f) - 40.f });
+
+        // flip y button icon
+        auto flipYBtnIcon = CCSprite::createWithSpriteFrameName("edit_flipYBtn_001.png");
+        flipYBtnIcon->setScale(iconScale);
+        flipYBtnIcon->setAnchorPoint({ 0.5, 0.5 });
+        flipYBtnIcon->ignoreAnchorPointForPosition(false);
+        flipYBtnIcon->setPosition({ m_fields->m_flipYBtn->getContentWidth() / 2.f, m_fields->m_flipYBtn->getContentHeight() / 2.f });
+
+        m_fields->m_flipYBtn->addChild(flipYBtnIcon);
+        m_fields->m_buttonMenu->addChild(m_fields->m_flipYBtn);
 
         // add the whole menu
         this->addChild(m_fields->m_buttonMenu);
@@ -393,8 +441,8 @@ class $modify(MyEditorUI, EditorUI) {
         };
     };
 
-    // move objects using the editcommand thingy
-    void onMove(EditCommand editCommand) {
+    // move, rotate, and flip objects using editcommand
+    void onMoveTransformCall(EditCommand editCommand, TransformType type) {
         if (!m_editorLayer) {
             log::error("No editor layer found");
             return;
@@ -406,28 +454,36 @@ class $modify(MyEditorUI, EditorUI) {
             return;
         };
 
-        log::info("Using built-in move command: {}", static_cast<int>(editCommand));
+        log::info("Using edit command: {}", static_cast<int>(editCommand));
 
-        // move object :)
-        this->moveObjectCall(editCommand);
+        // use move or transform depending on the kind of button being pressed
+        switch (type) {
+        case TransformType::Move:
+            this->moveObjectCall(editCommand);
+            break;
+
+        default:
+            this->transformObjectCall(editCommand);
+            break;
+        };
     };
 
     // hmmmm buttons my beloved
 
     void onMoveUpButton(CCObject*) {
-        this->onMove(getEditCmd(m_fields->moveSize, MoveDirection::Up));
+        this->onMoveTransformCall(getEditCmd(m_fields->moveSize, MoveDirection::Up), TransformType::Move);
     };
 
     void onMoveDownButton(CCObject*) {
-        this->onMove(getEditCmd(m_fields->moveSize, MoveDirection::Down));
+        this->onMoveTransformCall(getEditCmd(m_fields->moveSize, MoveDirection::Down), TransformType::Move);
     };
 
     void onMoveLeftButton(CCObject*) {
-        this->onMove(getEditCmd(m_fields->moveSize, MoveDirection::Left));
+        this->onMoveTransformCall(getEditCmd(m_fields->moveSize, MoveDirection::Left), TransformType::Move);
     };
 
     void onMoveRightButton(CCObject*) {
-        this->onMove(getEditCmd(m_fields->moveSize, MoveDirection::Right));
+        this->onMoveTransformCall(getEditCmd(m_fields->moveSize, MoveDirection::Right), TransformType::Move);
     };
 
     // i was gonna do if else statement but after learning about my c lessons in uni about switch statements, i use this :D
@@ -466,6 +522,26 @@ class $modify(MyEditorUI, EditorUI) {
         log::info("Move size changed to: {}", getMoveSizeName(m_fields->moveSize));
     };
 
+    // rotate buttons
+
+    void onRotateCounterClockwiseButton(CCObject*) {
+        this->onMoveTransformCall(EditCommand::RotateCCW45, TransformType::Rotate);
+    };
+
+    void onRotateClockwiseButton(CCObject*) {
+        this->onMoveTransformCall(EditCommand::RotateCW45, TransformType::Rotate);
+    };
+
+    // flip buttons
+
+    void onFlipXButton(CCObject*) {
+        this->onMoveTransformCall(EditCommand::FlipX, TransformType::Flip);
+    };
+
+    void onFlipYButton(CCObject*) {
+        this->onMoveTransformCall(EditCommand::FlipY, TransformType::Flip);
+    };
+
     void updateButtonMenuVisibility() {
         if (!m_fields->m_buttonMenu) return;
 
@@ -486,7 +562,7 @@ class $modify(MyEditorUI, EditorUI) {
     };
 
     void updateButtonBackgroundVisibility() {
-        bool showButtonBG = Mod::get()->getSettingValue<bool>("visibleButtonBG");
+        bool showButtonBG = Mod::get()->getSettingValue<bool>("visible-bg");
 
         // good idea to use the buttonsprite, way better than using CCMenuItemSpriteExtra :)
         // also if statement wall
@@ -497,6 +573,9 @@ class $modify(MyEditorUI, EditorUI) {
 
         if (m_fields->m_rotateCounterClockwiseBtnBg) m_fields->m_rotateCounterClockwiseBtnBg->setVisible(showButtonBG);
         if (m_fields->m_rotateClockwiseBtnBg) m_fields->m_rotateClockwiseBtnBg->setVisible(showButtonBG);
+
+        if (m_fields->m_flipXBtnBg) m_fields->m_flipXBtnBg->setVisible(showButtonBG);
+        if (m_fields->m_flipYBtnBg) m_fields->m_flipYBtnBg->setVisible(showButtonBG);
         // Note: m_moveSizeBtnBg is now nullptr since we use a simple sprite instead of ButtonSprite
     };
 
@@ -504,7 +583,7 @@ class $modify(MyEditorUI, EditorUI) {
         if (!m_fields->m_buttonMenu) return;
 
         // Get the scale value from settings
-        float scaleValue = Mod::get()->getSettingValue<float>("scaleButton");
+        float scaleValue = Mod::get()->getSettingValue<float>("scale-btn");
 
         // Apply the scale to the entire button menu
         m_fields->m_buttonMenu->setScale(scaleValue);
@@ -732,7 +811,7 @@ class $modify(MyEditorUI, EditorUI) {
 
     // Create button sprite based on settings
     ButtonSprite* createMoveButtonSprite(const std::string & text = "", int width = 20, bool absolute = true, const std::string & font = "bigFont.fnt", int height = 30, float scale = 0.1f) {
-        bool showButtonBG = Mod::get()->getSettingValue<bool>("visibleButtonBG");
+        bool showButtonBG = Mod::get()->getSettingValue<bool>("visible-bg");
 
         if (showButtonBG) {
             return ButtonSprite::create(text.c_str(), width, absolute, font.c_str(), "GJ_button_01.png", height, scale);

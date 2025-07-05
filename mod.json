@@ -10,24 +10,31 @@
 	"name": "Quick Move Buttons",
 	"version": "v1.0.0",
 	"settings": {
-		"scaleButton": {
-            "name": "Scale Move Button",
-			"description": "Change the size of the move button.",
-            "type": "float",
-            "default": 1,
-            "min": 0.5,
-            "max": 2,
-            "control": {
-                "slider": true
-            }
+		"scale-btn": {
+			"name": "Scale Move Buttons",
+			"description": "Change the size of the transform buttons.",
+			"type": "float",
+			"default": 1,
+			"min": 0.5,
+			"max": 2,
+			"control": {
+				"slider": true,
+				"slider-step": 0.125
+			}
 		},
-		"visibleButtonBG": {
-			"name": "Button Background",
-			"description": "Show the background of the move buttons.",
+		"visible-bg": {
+			"name": "Button Backgrounds",
+			"description": "Show the background of the transform buttons.",
 			"type": "bool",
 			"default": false
 		}
 	},
-	"developer": "ArcticWoof, Cheeseworks",
-	"description": "Adds Move buttons outside the Edit Tab."
+	"developers": [
+		"ArcticWoof",
+		"Cheeseworks"
+	],
+	"links": {
+		"source": "https://github.com/DumbCaveSpider/QuickMoveButtons"
+	},
+	"description": "Adds move buttons outside the Edit tab."
 }
