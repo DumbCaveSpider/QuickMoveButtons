@@ -14,6 +14,7 @@ In the mod's settings, you can customize button visuals and functionality.
 # Credits
 - Cheeseworks - For helping me make this mod possible since I barely understand some functionality to make things work
 - CyanBoi - For beta testing, finding bugs and giving me feedbacks
+- iCreate Pro - For inspiration on the Custom Move Button feature
 # Preview
 ![Preview 1 with button background](preview1.png)
 ![Preview 2 without button background](preview2.png)
