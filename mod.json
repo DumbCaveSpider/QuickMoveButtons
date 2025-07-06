@@ -8,11 +8,11 @@
 	},
 	"id": "arcticwoof.quickmovebuttons",
 	"name": "Quick Move Buttons",
-	"version": "v1.0.0",
+	"version": "v1.0.1",
 	"settings": {
 		"scale-btns": {
 			"name": "Scale Move Buttons",
-			"description": "Change the size of the transform buttons.",
+			"description": "Change the size of the transform buttons. <cr>Required to reopen the editor to take effect.</cr>",
 			"type": "float",
 			"default": 1,
 			"min": 0.5,
@@ -24,7 +24,7 @@
 		},
 		"opacity-btn": {
 			"name": "Button Opacity",
-			"description": "Change the opacity of the transform buttons. This does not affect the background.",
+			"description": "Change the opacity of the transform buttons. <cr>This does not affect the button background and applies whenever you drag the buttons</cr>",
 			"type": "int",
 			"default": 255,
 			"min": 75,
@@ -35,14 +35,20 @@
 			}
 		},
 		"visible-bg": {
-			"name": "Button Backgrounds",
-			"description": "Show the background of the transform buttons.",
+			"name": "Button Background",
+			"description": "Show the background of the transform buttons. <cr>Required to reopen the editor to take effect.</cr>",
 			"type": "bool",
 			"default": false
 		},
 		"no-dragging": {
 			"name": "Disable Dragging",
-			"description": "Disable dragging on the transform buttons. Useful if you want your buttons to stay in a fixed position and prevent accidental dragging.",
+			"description": "Disable dragging on the transform buttons. <cg>Useful if you want your buttons to stay in a fixed position and prevent accidental dragging.</cg>",
+			"type": "bool",
+			"default": false
+		},
+		"presistent-btn": {
+			"name": "Button Presistent",
+			"description": "Always show the transform buttons, even when an object is not selected.",
 			"type": "bool",
 			"default": false
 		}

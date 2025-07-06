@@ -164,6 +164,9 @@ class $modify(MyEditorUI, EditorUI) {
 
         CCPoint m_touchStartPos;
         CCPoint m_menuStartPos;
+
+        // Track UI visibility state
+        bool m_isUIVisible = true;
     };
 
     bool init(LevelEditorLayer * p0) {
@@ -179,7 +182,7 @@ class $modify(MyEditorUI, EditorUI) {
 
         m_fields->m_buttonMenu->setPosition(CCPoint(savedX, savedY));
         m_fields->m_buttonMenu->setAnchorPoint({ 0.5f, 0.5f });
-        m_fields->m_buttonMenu->setContentSize({ 130.0f, 130.0f });
+        m_fields->m_buttonMenu->setContentSize({ 140.0f, 140.0f });
         m_fields->m_buttonMenu->ignoreAnchorPointForPosition(false);
         m_fields->m_buttonMenu->setVisible(false); // Initially invisible since no objects are selected
 
@@ -445,11 +448,14 @@ class $modify(MyEditorUI, EditorUI) {
     void showUI(bool show) {
         EditorUI::showUI(show);
 
-        // Update visibility when UI is shown/hidden (took this from better edit or something)
+        // Track UI visibility state
+        m_fields->m_isUIVisible = show;
+
+        // Update visibility when UI is shown/hidden
         if (show) {
             updateButtonMenuVisibility();
         } else {
-            // Hide the menu when UI is hidden
+            // Always hide the menu when UI is hidden, regardless of persistent setting
             if (m_fields->m_buttonMenu) m_fields->m_buttonMenu->setVisible(false);
         };
     };
@@ -642,14 +648,28 @@ class $modify(MyEditorUI, EditorUI) {
             hasSelection = true;
         };
 
+        // Check if persistent button setting is enabled
+        bool isPersistent = Mod::get()->getSettingValue<bool>("presistent-btn");
+        
+        // Use tracked UI visibility state instead of this->isVisible()
+        bool isUIVisible = m_fields->m_isUIVisible;
+        
+        // Determine if menu should be visible (either has selection OR persistent mode is enabled) AND UI is visible
+        bool shouldBeVisible = (hasSelection || isPersistent) && isUIVisible;
+
         // Only log when visibility actually changes
         bool currentVisibility = m_fields->m_buttonMenu->isVisible();
-        if (currentVisibility != hasSelection) {
-            m_fields->m_buttonMenu->setVisible(hasSelection);
+        if (currentVisibility != shouldBeVisible) {
+            m_fields->m_buttonMenu->setVisible(shouldBeVisible);
         };
 
-        // Update rotation buttons when selection changes
-        if (hasSelection) updateRotationButtons();
+        // Update rotation buttons when selection changes or when persistent mode shows menu
+        if (hasSelection) {
+            updateRotationButtons();
+        } else if (isPersistent && isUIVisible) {
+            // When persistent but no selection, still update rotation buttons for consistency (only if UI is visible)
+            updateRotationButtons();
+        }
     };
 
     void updateButtonBackgroundVisibility() {
@@ -704,17 +724,33 @@ class $modify(MyEditorUI, EditorUI) {
     void update(float dt) {
         EditorUI::update(dt);
 
-        // Periodically check selection state and settings
+        // Very frequent check for better paste detection - check every frame but throttle updates
         static float timer = 0.0f;
+        static bool lastHasSelection = false;
         timer += dt;
 
-        if (timer >= 0.5f) { // Check every 0.5 seconds
+        // Check selection state every frame
+        bool currentHasSelection = false;
+        if (m_selectedObjects && m_selectedObjects->count() > 0) {
+            currentHasSelection = true;
+        } else if (m_selectedObject) {
+            currentHasSelection = true;
+        }
+
+        // If selection state changed, update immediately
+        if (currentHasSelection != lastHasSelection) {
             updateButtonMenuVisibility();
+            lastHasSelection = currentHasSelection;
+            timer = 0.0f; // Reset timer
+        }
+
+        // Also do periodic updates for settings changes
+        if (timer >= 0.2f) { // Check settings every 0.2 seconds
             updateButtonBackgroundVisibility(); // Check setting changes
             updateMenuScale(); // Check scale setting changes
             updateMenuOpacity(); // Check opacity setting changes
             timer = 0.0f;
-        };
+        }
     };
 
     // Override mouse/touch events to catch selection changes and handle dragging
