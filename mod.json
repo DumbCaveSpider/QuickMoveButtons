@@ -14,7 +14,9 @@
 		"Cheeseworks"
 	],
 	"links": {
-		"source": "https://github.com/DumbCaveSpider/QuickMoveButtons"
+		"source": "https://github.com/DumbCaveSpider/QuickMoveButtons",
+		"homepage": "https://arcticwoof.com.au/",
+		"community": "https://dsc.gg/arcticwoof"
 	},
 	"tags": [
 		"editor",
