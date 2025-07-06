@@ -7,24 +7,19 @@ This mod adds a scalable and moveable UI to the level editor with move, rotate, 
 In the mod's settings, you can customize button visuals and functionality.
 
 # How to use
-
-- Select an object to show the transform buttons in the editor.
-- Hold the draggable area of the buttons to move the menu.
-- Press the center button to toggle the move units.
+1. Select an object to show the transform buttons in the editor.
+2. Hold the draggable area of the buttons to move the menu.
+3. Press the center button to toggle the move units.
 
 # Credits
-
 - **Cheeseworks** - For helping me make this mod possible since I barely understand some functionality to make things work
 - **CyanBoi** - For beta testing, finding bugs and giving me feedbacks
 - **iCreate Pro** - For inspiration on the Custom Move Button feature
 
-# Preview
-
+# Previews
 ![Preview 1 with button background](arcticwoof.quickmovebuttons/preview-1.png)
-
 ![Preview 2 without button background](arcticwoof.quickmovebuttons/preview-2.png)
 
 # Known Bugs
-
 - Buttons disappears whenever you copy + paste multiple objects. Appears again whenever you move your editor 
 *(Best way to prevent this is enabling Button Presistent since I don't know how to fix this bug)*

@@ -183,11 +183,11 @@ class $modify(MyEditorUI, EditorUI) {
 
         m_fields->m_buttonMenu->setPosition(CCPoint(savedX, savedY));
         m_fields->m_buttonMenu->setAnchorPoint({ 0.5f, 0.5f });
-        
+
         // Get background size from settings
         int bgSize = Mod::get()->getSettingValue<int>("scale-bg");
         m_fields->m_buttonMenu->setContentSize({ static_cast<float>(bgSize), static_cast<float>(bgSize) });
-        
+
         m_fields->m_buttonMenu->ignoreAnchorPointForPosition(false);
         m_fields->m_buttonMenu->setVisible(false); // Initially invisible since no objects are selected
 
@@ -501,11 +501,11 @@ class $modify(MyEditorUI, EditorUI) {
         // use move or transform depending on the kind of button being pressed
         switch (type) {
         case TransformType::Move:
-            this->moveObjectCall(editCommand);
+            EditorUI::moveObjectCall(editCommand);
             break;
 
         default:
-            this->transformObjectCall(editCommand);
+            EditorUI::transformObjectCall(editCommand);
             break;
         };
     };
@@ -673,10 +673,10 @@ class $modify(MyEditorUI, EditorUI) {
 
         // Check if persistent button setting is enabled
         bool isPersistent = Mod::get()->getSettingValue<bool>("presistent-btn");
-        
+
         // Use tracked UI visibility state instead of this->isVisible()
         bool isUIVisible = m_fields->m_isUIVisible;
-        
+
         // Determine if menu should be visible (either has selection OR persistent mode is enabled) AND UI is visible
         bool shouldBeVisible = (hasSelection || isPersistent) && isUIVisible;
 
@@ -993,7 +993,7 @@ class $modify(MyEditorUI, EditorUI) {
             int menuBgOpacity = m_fields->m_isDragging ? 25 : 50;
             m_fields->m_buttonMenuBg->setOpacity(menuBgOpacity);
         }
-        
+
         if (m_fields->m_buttonMenuBgDepth && m_fields->m_buttonMenuBgDepth->isVisible()) {
             // Base opacity for depth background is 25, reduce to 15 when dragging
             int depthBgOpacity = m_fields->m_isDragging ? 15 : 25;
@@ -1005,17 +1005,17 @@ class $modify(MyEditorUI, EditorUI) {
         if (!m_fields->m_buttonMenuBg || !m_fields->m_buttonMenuBgDepth) return;
 
         bool showMenuBG = Mod::get()->getSettingValue<bool>("menu-btn");
-        
+
         // Update visibility for both backgrounds
         m_fields->m_buttonMenuBg->setVisible(showMenuBG);
         m_fields->m_buttonMenuBgDepth->setVisible(showMenuBG);
-        
+
         // Set proper opacity when visibility changes
         if (showMenuBG) {
             // Main background opacity
             int menuBgOpacity = m_fields->m_isDragging ? 25 : 50;
             m_fields->m_buttonMenuBg->setOpacity(menuBgOpacity);
-            
+
             // Depth background opacity (always lower for shadow effect)
             int depthBgOpacity = m_fields->m_isDragging ? 15 : 25;
             m_fields->m_buttonMenuBgDepth->setOpacity(depthBgOpacity);
@@ -1065,19 +1065,19 @@ class $modify(MyEditorUI, EditorUI) {
         int bgSize = Mod::get()->getSettingValue<int>("scale-bg");
         CCSize newSize = { static_cast<float>(bgSize), static_cast<float>(bgSize) };
         CCSize depthSize = { static_cast<float>(bgSize + 6), static_cast<float>(bgSize + 6) }; // Larger for depth
-        
+
         // Update menu content size
         m_fields->m_buttonMenu->setContentSize(newSize);
-        
+
         // Reposition all buttons to match the new center
         repositionButtons();
-        
+
         // Update main background size and position to keep it centered
         if (m_fields->m_buttonMenuBg) {
             m_fields->m_buttonMenuBg->setContentSize(newSize);
             m_fields->m_buttonMenuBg->setPosition({ m_fields->m_buttonMenu->getContentWidth() / 2.f, m_fields->m_buttonMenu->getContentHeight() / 2.f });
         }
-        
+
         // Update depth background size and position (larger but same center position)
         if (m_fields->m_buttonMenuBgDepth) {
             m_fields->m_buttonMenuBgDepth->setContentSize(depthSize);
