@@ -16,8 +16,8 @@ In the mod's settings, you can customize button visuals and functionality.
 - **CyanBoi** - For beta testing, finding bugs and giving me feedbacks
 - **iCreate Pro** - For inspiration on the Custom Move Button feature
 # Preview
-![Preview 1 with button background](preview1.png)
-![Preview 2 without button background](preview2.png)
+![Preview 1 with button background](previews/preview-1.png)
+![Preview 2 without button background](previews/preview-2.png)
 # Known Bugs
 - Buttons disappears whenever you copy + paste multiple objects. Appears again whenever you move your editor 
 *(Best way to prevent this is enabling Button Presistent since I don't know how to fix this bug)*

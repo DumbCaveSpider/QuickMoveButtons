@@ -8,7 +8,27 @@
 	},
 	"id": "arcticwoof.quickmovebuttons",
 	"name": "Quick Move Buttons",
-	"version": "v1.0.1",
+	"version": "v1.0.2",
+	"developers": [
+		"ArcticWoof",
+		"Cheeseworks"
+	],
+	"links": {
+		"source": "https://github.com/DumbCaveSpider/QuickMoveButtons"
+	},
+	"tags": [
+		"editor",
+		"interface",
+		"enhancement",
+		"offline",
+		"utility"
+	],
+	"description": "Adds move buttons outside the Edit tab.",
+	"resources": {
+		"sprites": [
+			"previews/*"
+		]
+	},
 	"settings": {
 		"scale-btns": {
 			"name": "Scale Button",
@@ -70,20 +90,5 @@
 			"type": "bool",
 			"default": false
 		}
-	},
-	"developers": [
-		"ArcticWoof",
-		"Cheeseworks"
-	],
-	"links": {
-		"source": "https://github.com/DumbCaveSpider/QuickMoveButtons"
-	},
-	"tags": [
-		"editor",
-		"interface",
-		"enhancement",
-		"offline",
-		"utility"
-	],
-	"description": "Adds move buttons outside the Edit tab."
+	}
 }

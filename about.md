@@ -20,9 +20,9 @@ In the mod's settings, you can customize button visuals and functionality.
 
 # Preview
 
-![Preview 1 with button background](arcticwoof.quickmovebuttons/preview1.png)
+![Preview 1 with button background](arcticwoof.quickmovebuttons/preview-1.png)
 
-![Preview 2 without button background](arcticwoof.quickmovebuttons/preview2.png)
+![Preview 2 without button background](arcticwoof.quickmovebuttons/preview-2.png)
 
 # Known Bugs
 
