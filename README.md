@@ -15,6 +15,7 @@ In the mod's settings, you can customize button visuals and functionality.
 # How to use
 - Select an object to show the transform buttons in the editor.
 - Hold around the edge of the buttons to drag around the buttons.
+- Press the center button to change the move units
 # Preview
 ![Preview 1 with button background](preview1.png)
 ![Preview 2 without button background](preview2.png)
