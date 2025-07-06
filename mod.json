@@ -11,8 +11,8 @@
 	"version": "v1.0.1",
 	"settings": {
 		"scale-btns": {
-			"name": "Scale Move Buttons",
-			"description": "Change the size of the transform buttons. <cr>Required to reopen the editor to take effect.</cr>",
+			"name": "Scale Button",
+			"description": "Change the scale of the transform buttons, <co>draggable area also be affected.</co> <cr>Required to reopen the editor to take effect.</cr>",
 			"type": "float",
 			"default": 1,
 			"min": 0.5,
@@ -34,11 +34,29 @@
 				"slider-step": 5
 			}
 		},
+		"scale-bg": {
+			"name": "Scale Draggable Area",
+			"description": "Change the scale of the draggable area. <cg>Useful if you can't drag properly due to the area size.</cg> <cr>Required to reopen the editor to take effect.</cr>",
+			"type": "int",
+			"default": 130,
+			"min": 130,
+			"max": 200,
+			"control": {
+				"slider": true,
+				"slider-step": 10
+			}
+		},
 		"visible-bg": {
-			"name": "Button Background",
+			"name": "Show Button Background",
 			"description": "Show the background of the transform buttons. <cr>Required to reopen the editor to take effect.</cr>",
 			"type": "bool",
 			"default": false
+		},
+		"menu-btn": {
+			"name": "Show Draggable Area",
+			"description": "Show the draggable area for transform buttons. <cg>Useful if you want to know the draggable area.</cg>",
+			"type": "bool",
+			"default": true
 		},
 		"no-dragging": {
 			"name": "Disable Dragging",

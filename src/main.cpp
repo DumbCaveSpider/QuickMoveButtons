@@ -122,6 +122,7 @@ class $modify(MyEditorUI, EditorUI) {
 
         CCMenu* m_buttonMenu;
         CCScale9Sprite* m_buttonMenuBg;
+        CCScale9Sprite* m_buttonMenuBgDepth; // Second background for depth effect
 
         // Move buttons
         CCMenuItemSpriteExtra* m_moveUpBtn;
@@ -182,18 +183,34 @@ class $modify(MyEditorUI, EditorUI) {
 
         m_fields->m_buttonMenu->setPosition(CCPoint(savedX, savedY));
         m_fields->m_buttonMenu->setAnchorPoint({ 0.5f, 0.5f });
-        m_fields->m_buttonMenu->setContentSize({ 140.0f, 140.0f });
+        
+        // Get background size from settings
+        int bgSize = Mod::get()->getSettingValue<int>("scale-bg");
+        m_fields->m_buttonMenu->setContentSize({ static_cast<float>(bgSize), static_cast<float>(bgSize) });
+        
         m_fields->m_buttonMenu->ignoreAnchorPointForPosition(false);
         m_fields->m_buttonMenu->setVisible(false); // Initially invisible since no objects are selected
 
-        // create visible background for the menu
+        // create depth background for the menu (behind the main background)
+        auto buttonMenuBgDepth = CCScale9Sprite::create("square02_001.png");
+        CCSize depthSize = { static_cast<float>(bgSize + 6), static_cast<float>(bgSize + 6) }; // Larger for depth
+        buttonMenuBgDepth->setContentSize(depthSize);
+        buttonMenuBgDepth->ignoreAnchorPointForPosition(false);
+        buttonMenuBgDepth->setAnchorPoint({ 0.5, 0.5 });
+        buttonMenuBgDepth->setOpacity(25); // Lower opacity for depth effect
+        buttonMenuBgDepth->setPosition({ m_fields->m_buttonMenu->getContentWidth() / 2.f, m_fields->m_buttonMenu->getContentHeight() / 2.f }); // Same position as main background
+        buttonMenuBgDepth->setColor({ 0, 0, 0 }); // Darker color for shadow effect
+
+        m_fields->m_buttonMenuBgDepth = buttonMenuBgDepth;
+        m_fields->m_buttonMenu->addChild(buttonMenuBgDepth);
+
+        // create visible background for the menu (main background)
         auto buttonMenuBg = CCScale9Sprite::create("square02_001.png");
         buttonMenuBg->setContentSize(m_fields->m_buttonMenu->getContentSize());
         buttonMenuBg->ignoreAnchorPointForPosition(false);
         buttonMenuBg->setAnchorPoint({ 0.5, 0.5 });
-        buttonMenuBg->setOpacity(100); // Slightly more visible for dragging
+        buttonMenuBg->setOpacity(50); // Set opacity to 50 when visible
         buttonMenuBg->setPosition({ m_fields->m_buttonMenu->getContentWidth() / 2.f, m_fields->m_buttonMenu->getContentHeight() / 2.f });
-        buttonMenuBg->setVisible(false); // Always invisible
 
         m_fields->m_buttonMenuBg = buttonMenuBg;
         m_fields->m_buttonMenu->addChild(buttonMenuBg);
@@ -216,7 +233,7 @@ class $modify(MyEditorUI, EditorUI) {
         m_fields->m_moveUpBtn->setID("move-up");
         m_fields->m_moveUpBtn->ignoreAnchorPointForPosition(false);
         m_fields->m_moveUpBtn->setAnchorPoint({ 0.5, 0.5 });
-        m_fields->m_moveUpBtn->setPosition({ m_fields->m_buttonMenu->getContentWidth() / 2.f, (m_fields->m_buttonMenu->getContentHeight() / 2.f) + 30.f });
+        m_fields->m_moveUpBtn->setPosition({ m_fields->m_buttonMenu->getContentWidth() / 2.f, (m_fields->m_buttonMenu->getContentHeight() / 2.f) + 35.f });
 
         // move up button
         auto moveUpBtnIcon = CCSprite::createWithSpriteFrameName(moveBtnIconSpriteName.c_str());
@@ -242,7 +259,7 @@ class $modify(MyEditorUI, EditorUI) {
         m_fields->m_moveDownBtn->setID("move-down");
         m_fields->m_moveDownBtn->ignoreAnchorPointForPosition(false);
         m_fields->m_moveDownBtn->setAnchorPoint({ 0.5, 0.5 });
-        m_fields->m_moveDownBtn->setPosition({ m_fields->m_buttonMenu->getContentWidth() / 2.f, (m_fields->m_buttonMenu->getContentHeight() / 2.f) - 30.f });
+        m_fields->m_moveDownBtn->setPosition({ m_fields->m_buttonMenu->getContentWidth() / 2.f, (m_fields->m_buttonMenu->getContentHeight() / 2.f) - 35.f });
 
         // move down button icon
         auto moveDownBtnIcon = CCSprite::createWithSpriteFrameName(moveBtnIconSpriteName.c_str());
@@ -327,7 +344,7 @@ class $modify(MyEditorUI, EditorUI) {
         m_fields->m_buttonMenu->addChild(m_fields->m_moveSizeBtn);
 
         // create rotate counter clockwise button
-        auto rotateCounterClockwiseSprite = ButtonSprite::create("", 15, true, "bigFont.fnt", "GJ_button_01.png", 32.5f, 0.1f);
+        auto rotateCounterClockwiseSprite = ButtonSprite::create("", 18.5f, true, "bigFont.fnt", "GJ_button_01.png", 33.5f, 0.1f);
         m_fields->m_rotateCounterClockwiseBtnBg = rotateCounterClockwiseSprite;
 
         m_fields->m_rotateCounterClockwiseBtn = CCMenuItemSpriteExtra::create(
@@ -351,7 +368,7 @@ class $modify(MyEditorUI, EditorUI) {
         m_fields->m_buttonMenu->addChild(m_fields->m_rotateCounterClockwiseBtn);
 
         // create rotate clockwise button
-        auto rotateClockwiseSprite = ButtonSprite::create("", 15, true, "bigFont.fnt", "GJ_button_01.png", 32.5f, 0.1f);
+        auto rotateClockwiseSprite = ButtonSprite::create("", 18.5f, true, "bigFont.fnt", "GJ_button_01.png", 33.5f, 0.1f);
         m_fields->m_rotateClockwiseBtnBg = rotateClockwiseSprite;
 
         m_fields->m_rotateClockwiseBtn = CCMenuItemSpriteExtra::create(
@@ -375,7 +392,7 @@ class $modify(MyEditorUI, EditorUI) {
         m_fields->m_buttonMenu->addChild(m_fields->m_rotateClockwiseBtn);
 
         // create flip x button
-        auto flipXSprite = ButtonSprite::create("", 15, true, "bigFont.fnt", "GJ_button_01.png", 32.5f, 0.1f);
+        auto flipXSprite = ButtonSprite::create("", 18.5f, true, "bigFont.fnt", "GJ_button_01.png", 33.5f, 0.1f);
         m_fields->m_flipXBtnBg = flipXSprite;
 
         m_fields->m_flipXBtn = CCMenuItemSpriteExtra::create(
@@ -399,7 +416,7 @@ class $modify(MyEditorUI, EditorUI) {
         m_fields->m_buttonMenu->addChild(m_fields->m_flipXBtn);
 
         // create flip y button
-        auto flipYSprite = ButtonSprite::create("", 15, true, "bigFont.fnt", "GJ_button_01.png", 32.5f, 0.1f);
+        auto flipYSprite = ButtonSprite::create("", 18.5f, true, "bigFont.fnt", "GJ_button_01.png", 33.5f, 0.1f);
         m_fields->m_flipYBtnBg = flipYSprite;
 
         m_fields->m_flipYBtn = CCMenuItemSpriteExtra::create(
@@ -427,6 +444,12 @@ class $modify(MyEditorUI, EditorUI) {
 
         // Apply button background visibility setting
         updateButtonBackgroundVisibility();
+
+        // Apply menu background visibility setting
+        updateMenuBackgroundVisibility();
+
+        // Apply menu size setting
+        updateMenuSize();
 
         // Apply scale setting
         updateMenuScale();
@@ -747,6 +770,8 @@ class $modify(MyEditorUI, EditorUI) {
         // Also do periodic updates for settings changes
         if (timer >= 0.2f) { // Check settings every 0.2 seconds
             updateButtonBackgroundVisibility(); // Check setting changes
+            updateMenuBackgroundVisibility(); // Check menu background setting changes
+            updateMenuSize(); // Check menu size setting changes
             updateMenuScale(); // Check scale setting changes
             updateMenuOpacity(); // Check opacity setting changes
             timer = 0.0f;
@@ -956,11 +981,108 @@ class $modify(MyEditorUI, EditorUI) {
         // Get the opacity value from settings
         int baseOpacity = Mod::get()->getSettingValue<int>("opacity-btn");
 
-        // If dragging, reduce opacity by 30
+        // If dragging, reduce opacity by 50
         int currentOpacity = m_fields->m_isDragging ? std::max(0, baseOpacity - 50) : baseOpacity;
 
         // Apply the opacity to the entire button menu
         m_fields->m_buttonMenu->setOpacity(currentOpacity);
+
+        // Also update the menu background opacity separately if they exist and are visible
+        if (m_fields->m_buttonMenuBg && m_fields->m_buttonMenuBg->isVisible()) {
+            // Base opacity for main menu background is 50, reduce to 25 when dragging
+            int menuBgOpacity = m_fields->m_isDragging ? 25 : 50;
+            m_fields->m_buttonMenuBg->setOpacity(menuBgOpacity);
+        }
+        
+        if (m_fields->m_buttonMenuBgDepth && m_fields->m_buttonMenuBgDepth->isVisible()) {
+            // Base opacity for depth background is 25, reduce to 15 when dragging
+            int depthBgOpacity = m_fields->m_isDragging ? 15 : 25;
+            m_fields->m_buttonMenuBgDepth->setOpacity(depthBgOpacity);
+        }
+    };
+
+    void updateMenuBackgroundVisibility() {
+        if (!m_fields->m_buttonMenuBg || !m_fields->m_buttonMenuBgDepth) return;
+
+        bool showMenuBG = Mod::get()->getSettingValue<bool>("menu-btn");
+        
+        // Update visibility for both backgrounds
+        m_fields->m_buttonMenuBg->setVisible(showMenuBG);
+        m_fields->m_buttonMenuBgDepth->setVisible(showMenuBG);
+        
+        // Set proper opacity when visibility changes
+        if (showMenuBG) {
+            // Main background opacity
+            int menuBgOpacity = m_fields->m_isDragging ? 25 : 50;
+            m_fields->m_buttonMenuBg->setOpacity(menuBgOpacity);
+            
+            // Depth background opacity (always lower for shadow effect)
+            int depthBgOpacity = m_fields->m_isDragging ? 15 : 25;
+            m_fields->m_buttonMenuBgDepth->setOpacity(depthBgOpacity);
+        }
+    };
+
+    void repositionButtons() {
+        if (!m_fields->m_buttonMenu) return;
+
+        float centerX = m_fields->m_buttonMenu->getContentWidth() / 2.f;
+        float centerY = m_fields->m_buttonMenu->getContentHeight() / 2.f;
+
+        // Reposition all buttons relative to the center
+        if (m_fields->m_moveUpBtn) {
+            m_fields->m_moveUpBtn->setPosition({ centerX, centerY + 35.f });
+        }
+        if (m_fields->m_moveDownBtn) {
+            m_fields->m_moveDownBtn->setPosition({ centerX, centerY - 35.f });
+        }
+        if (m_fields->m_moveLeftBtn) {
+            m_fields->m_moveLeftBtn->setPosition({ centerX - 35.f, centerY });
+        }
+        if (m_fields->m_moveRightBtn) {
+            m_fields->m_moveRightBtn->setPosition({ centerX + 35.f, centerY });
+        }
+        if (m_fields->m_moveSizeBtn) {
+            m_fields->m_moveSizeBtn->setPosition({ centerX, centerY });
+        }
+        if (m_fields->m_rotateCounterClockwiseBtn) {
+            m_fields->m_rotateCounterClockwiseBtn->setPosition({ centerX - 40.f, centerY + 40.f });
+        }
+        if (m_fields->m_rotateClockwiseBtn) {
+            m_fields->m_rotateClockwiseBtn->setPosition({ centerX + 40.f, centerY + 40.f });
+        }
+        if (m_fields->m_flipXBtn) {
+            m_fields->m_flipXBtn->setPosition({ centerX - 40.f, centerY - 40.f });
+        }
+        if (m_fields->m_flipYBtn) {
+            m_fields->m_flipYBtn->setPosition({ centerX + 40.f, centerY - 40.f });
+        }
+    }
+
+    void updateMenuSize() {
+        if (!m_fields->m_buttonMenu) return;
+
+        // Get background size from settings
+        int bgSize = Mod::get()->getSettingValue<int>("scale-bg");
+        CCSize newSize = { static_cast<float>(bgSize), static_cast<float>(bgSize) };
+        CCSize depthSize = { static_cast<float>(bgSize + 6), static_cast<float>(bgSize + 6) }; // Larger for depth
+        
+        // Update menu content size
+        m_fields->m_buttonMenu->setContentSize(newSize);
+        
+        // Reposition all buttons to match the new center
+        repositionButtons();
+        
+        // Update main background size and position to keep it centered
+        if (m_fields->m_buttonMenuBg) {
+            m_fields->m_buttonMenuBg->setContentSize(newSize);
+            m_fields->m_buttonMenuBg->setPosition({ m_fields->m_buttonMenu->getContentWidth() / 2.f, m_fields->m_buttonMenu->getContentHeight() / 2.f });
+        }
+        
+        // Update depth background size and position (larger but same center position)
+        if (m_fields->m_buttonMenuBgDepth) {
+            m_fields->m_buttonMenuBgDepth->setContentSize(depthSize);
+            m_fields->m_buttonMenuBgDepth->setPosition({ m_fields->m_buttonMenu->getContentWidth() / 2.f, m_fields->m_buttonMenu->getContentHeight() / 2.f });
+        }
     };
 };
 

@@ -9,7 +9,7 @@ In the mod's settings, you can customize button visuals and functionality.
 # How to use
 
 - Select an object to show the transform buttons in the editor.
-- Hold around the edge of the buttons to drag around the buttons.
+- Hold the draggable area of the buttons to move the menu.
 - Press the center button to toggle the move units.
 
 # Credits
@@ -26,4 +26,5 @@ In the mod's settings, you can customize button visuals and functionality.
 
 # Known Bugs
 
-- Buttons disappears whenever you copy + paste multiple objects. Appears again whenever you move your editor *(Best way to prevent this is enabling Button Presistent since I don't know how to fix this bug)*
+- Buttons disappears whenever you copy + paste multiple objects. Appears again whenever you move your editor 
+*(Best way to prevent this is enabling Button Presistent since I don't know how to fix this bug)*
