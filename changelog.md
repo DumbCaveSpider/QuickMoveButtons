@@ -1,5 +1,6 @@
 # v1.0.2
-- Fixed previews
+- Fixed mod description previews
+- Improved mod setting descriptions
 
 # v1.0.1
 - Added **Button Presistent** in the mod settings (Always show the transform buttons even when an object isn't selected)
