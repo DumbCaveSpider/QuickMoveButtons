@@ -1,4 +1,5 @@
 # v1.0.2
+- Code cleanup
 - Fixed mod description previews
 - Improved mod setting descriptions
 
