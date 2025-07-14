@@ -13,10 +13,10 @@ jobs:
       matrix:
         config:
         - name: Windows
-           os: windows-latest
+          os: windows-latest
 
         - name: macOS
-           os: macos-latest
+          os: macos-latest
 
         - name: iOS
           os: macos-latest
