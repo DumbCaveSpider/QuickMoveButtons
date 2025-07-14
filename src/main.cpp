@@ -440,7 +440,7 @@ class $modify(MyEditorUI, EditorUI) {
         m_fields->m_buttonMenu->addChild(m_fields->m_flipYBtn);
 
         // add the whole menu
-        this->addChild(m_fields->m_buttonMenu);
+        addChild(m_fields->m_buttonMenu);
 
         // Apply button background visibility setting
         updateButtonBackgroundVisibility();
@@ -513,19 +513,19 @@ class $modify(MyEditorUI, EditorUI) {
     // hmmmm buttons my beloved
 
     void onMoveUpButton(CCObject*) {
-        this->onMoveTransformCall(getEditCmd(m_fields->moveSize, MoveDirection::Up), TransformType::Move);
+        onMoveTransformCall(getEditCmd(m_fields->moveSize, MoveDirection::Up), TransformType::Move);
     };
 
     void onMoveDownButton(CCObject*) {
-        this->onMoveTransformCall(getEditCmd(m_fields->moveSize, MoveDirection::Down), TransformType::Move);
+        onMoveTransformCall(getEditCmd(m_fields->moveSize, MoveDirection::Down), TransformType::Move);
     };
 
     void onMoveLeftButton(CCObject*) {
-        this->onMoveTransformCall(getEditCmd(m_fields->moveSize, MoveDirection::Left), TransformType::Move);
+        onMoveTransformCall(getEditCmd(m_fields->moveSize, MoveDirection::Left), TransformType::Move);
     };
 
     void onMoveRightButton(CCObject*) {
-        this->onMoveTransformCall(getEditCmd(m_fields->moveSize, MoveDirection::Right), TransformType::Move);
+        onMoveTransformCall(getEditCmd(m_fields->moveSize, MoveDirection::Right), TransformType::Move);
     };
 
     // i was gonna do if else statement but after learning about my c lessons in uni about switch statements, i use this :D
@@ -572,23 +572,23 @@ class $modify(MyEditorUI, EditorUI) {
     void onRotateCounterClockwiseButton(CCObject*) {
         bool hasSolid = hasSolidObjects();
         EditCommand rotateCmd = hasSolid ? EditCommand::RotateCCW : EditCommand::RotateCCW45;
-        this->onMoveTransformCall(rotateCmd, TransformType::Rotate);
+        onMoveTransformCall(rotateCmd, TransformType::Rotate);
     };
 
     void onRotateClockwiseButton(CCObject*) {
         bool hasSolid = hasSolidObjects();
         EditCommand rotateCmd = hasSolid ? EditCommand::RotateCW : EditCommand::RotateCW45;
-        this->onMoveTransformCall(rotateCmd, TransformType::Rotate);
+        onMoveTransformCall(rotateCmd, TransformType::Rotate);
     };
 
     // flip buttons
 
     void onFlipXButton(CCObject*) {
-        this->onMoveTransformCall(EditCommand::FlipX, TransformType::Flip);
+        onMoveTransformCall(EditCommand::FlipX, TransformType::Flip);
     };
 
     void onFlipYButton(CCObject*) {
-        this->onMoveTransformCall(EditCommand::FlipY, TransformType::Flip);
+        onMoveTransformCall(EditCommand::FlipY, TransformType::Flip);
     };
 
     // Check if the current selection contains any solid or slope objects
@@ -674,7 +674,7 @@ class $modify(MyEditorUI, EditorUI) {
         // Check if persistent button setting is enabled
         bool isPersistent = Mod::get()->getSettingValue<bool>("presistent-btn");
 
-        // Use tracked UI visibility state instead of this->isVisible()
+        // Use tracked UI visibility state instead of isVisible()
         bool isUIVisible = m_fields->m_isUIVisible;
 
         // Determine if menu should be visible (either has selection OR persistent mode is enabled) AND UI is visible
@@ -682,9 +682,7 @@ class $modify(MyEditorUI, EditorUI) {
 
         // Only log when visibility actually changes
         bool currentVisibility = m_fields->m_buttonMenu->isVisible();
-        if (currentVisibility != shouldBeVisible) {
-            m_fields->m_buttonMenu->setVisible(shouldBeVisible);
-        };
+        if (currentVisibility != shouldBeVisible) m_fields->m_buttonMenu->setVisible(shouldBeVisible);
 
         // Update rotation buttons when selection changes or when persistent mode shows menu
         if (hasSelection) {
@@ -692,7 +690,7 @@ class $modify(MyEditorUI, EditorUI) {
         } else if (isPersistent && isUIVisible) {
             // When persistent but no selection, still update rotation buttons for consistency (only if UI is visible)
             updateRotationButtons();
-        }
+        };
     };
 
     void updateButtonBackgroundVisibility() {
@@ -758,14 +756,14 @@ class $modify(MyEditorUI, EditorUI) {
             currentHasSelection = true;
         } else if (m_selectedObject) {
             currentHasSelection = true;
-        }
+        };
 
         // If selection state changed, update immediately
         if (currentHasSelection != lastHasSelection) {
             updateButtonMenuVisibility();
             lastHasSelection = currentHasSelection;
             timer = 0.0f; // Reset timer
-        }
+        };
 
         // Also do periodic updates for settings changes
         if (timer >= 0.2f) { // Check settings every 0.2 seconds
@@ -775,7 +773,7 @@ class $modify(MyEditorUI, EditorUI) {
             updateMenuScale(); // Check scale setting changes
             updateMenuOpacity(); // Check opacity setting changes
             timer = 0.0f;
-        }
+        };
     };
 
     // Override mouse/touch events to catch selection changes and handle dragging
@@ -856,7 +854,7 @@ class $modify(MyEditorUI, EditorUI) {
         bool result = EditorUI::ccTouchBegan(touch, event);
 
         // Delay the visibility update slightly to let selection complete
-        this->runAction(CCSequence::create(
+        runAction(CCSequence::create(
             CCDelayTime::create(0.01f),
             CCCallFunc::create(this, callfunc_selector(MyEditorUI::updateButtonMenuVisibility)),
             nullptr
@@ -992,13 +990,13 @@ class $modify(MyEditorUI, EditorUI) {
             // Base opacity for main menu background is 50, reduce to 25 when dragging
             int menuBgOpacity = m_fields->m_isDragging ? 25 : 50;
             m_fields->m_buttonMenuBg->setOpacity(menuBgOpacity);
-        }
+        };
 
         if (m_fields->m_buttonMenuBgDepth && m_fields->m_buttonMenuBgDepth->isVisible()) {
             // Base opacity for depth background is 25, reduce to 15 when dragging
             int depthBgOpacity = m_fields->m_isDragging ? 15 : 25;
             m_fields->m_buttonMenuBgDepth->setOpacity(depthBgOpacity);
-        }
+        };
     };
 
     void updateMenuBackgroundVisibility() {
@@ -1019,7 +1017,7 @@ class $modify(MyEditorUI, EditorUI) {
             // Depth background opacity (always lower for shadow effect)
             int depthBgOpacity = m_fields->m_isDragging ? 15 : 25;
             m_fields->m_buttonMenuBgDepth->setOpacity(depthBgOpacity);
-        }
+        };
     };
 
     void repositionButtons() {
@@ -1029,34 +1027,19 @@ class $modify(MyEditorUI, EditorUI) {
         float centerY = m_fields->m_buttonMenu->getContentHeight() / 2.f;
 
         // Reposition all buttons relative to the center
-        if (m_fields->m_moveUpBtn) {
-            m_fields->m_moveUpBtn->setPosition({ centerX, centerY + 35.f });
-        }
-        if (m_fields->m_moveDownBtn) {
-            m_fields->m_moveDownBtn->setPosition({ centerX, centerY - 35.f });
-        }
-        if (m_fields->m_moveLeftBtn) {
-            m_fields->m_moveLeftBtn->setPosition({ centerX - 35.f, centerY });
-        }
-        if (m_fields->m_moveRightBtn) {
-            m_fields->m_moveRightBtn->setPosition({ centerX + 35.f, centerY });
-        }
-        if (m_fields->m_moveSizeBtn) {
-            m_fields->m_moveSizeBtn->setPosition({ centerX, centerY });
-        }
-        if (m_fields->m_rotateCounterClockwiseBtn) {
-            m_fields->m_rotateCounterClockwiseBtn->setPosition({ centerX - 40.f, centerY + 40.f });
-        }
-        if (m_fields->m_rotateClockwiseBtn) {
-            m_fields->m_rotateClockwiseBtn->setPosition({ centerX + 40.f, centerY + 40.f });
-        }
-        if (m_fields->m_flipXBtn) {
-            m_fields->m_flipXBtn->setPosition({ centerX - 40.f, centerY - 40.f });
-        }
-        if (m_fields->m_flipYBtn) {
-            m_fields->m_flipYBtn->setPosition({ centerX + 40.f, centerY - 40.f });
-        }
-    }
+        if (m_fields->m_moveUpBtn) m_fields->m_moveUpBtn->setPosition({ centerX, centerY + 35.f });
+        if (m_fields->m_moveDownBtn) m_fields->m_moveDownBtn->setPosition({ centerX, centerY - 35.f });
+        if (m_fields->m_moveLeftBtn) m_fields->m_moveLeftBtn->setPosition({ centerX - 35.f, centerY });
+        if (m_fields->m_moveRightBtn) m_fields->m_moveRightBtn->setPosition({ centerX + 35.f, centerY });
+
+        if (m_fields->m_moveSizeBtn) m_fields->m_moveSizeBtn->setPosition({ centerX, centerY });
+
+        if (m_fields->m_rotateCounterClockwiseBtn) m_fields->m_rotateCounterClockwiseBtn->setPosition({ centerX - 40.f, centerY + 40.f });
+        if (m_fields->m_rotateClockwiseBtn) m_fields->m_rotateClockwiseBtn->setPosition({ centerX + 40.f, centerY + 40.f });
+
+        if (m_fields->m_flipXBtn) m_fields->m_flipXBtn->setPosition({ centerX - 40.f, centerY - 40.f });
+        if (m_fields->m_flipYBtn) m_fields->m_flipYBtn->setPosition({ centerX + 40.f, centerY - 40.f });
+    };
 
     void updateMenuSize() {
         if (!m_fields->m_buttonMenu) return;
@@ -1076,13 +1059,13 @@ class $modify(MyEditorUI, EditorUI) {
         if (m_fields->m_buttonMenuBg) {
             m_fields->m_buttonMenuBg->setContentSize(newSize);
             m_fields->m_buttonMenuBg->setPosition({ m_fields->m_buttonMenu->getContentWidth() / 2.f, m_fields->m_buttonMenu->getContentHeight() / 2.f });
-        }
+        };
 
         // Update depth background size and position (larger but same center position)
         if (m_fields->m_buttonMenuBgDepth) {
             m_fields->m_buttonMenuBgDepth->setContentSize(depthSize);
             m_fields->m_buttonMenuBgDepth->setPosition({ m_fields->m_buttonMenu->getContentWidth() / 2.f, m_fields->m_buttonMenu->getContentHeight() / 2.f });
-        }
+        };
     };
 };
 
@@ -1091,7 +1074,7 @@ class $modify(MyEditorPauseLayer, EditorPauseLayer) {
         if (!EditorPauseLayer::init(p0)) return false;
 
         auto mod = getMod();
-        auto guidelinesMenu = this->getChildByID("guidelines-menu");
+        auto guidelinesMenu = getChildByID("guidelines-menu");
 
         auto modSettingsBtnSprite = CCSprite::createWithSpriteFrameName("GJ_plainBtn_001.png");
         modSettingsBtnSprite->setScale(0.875f);

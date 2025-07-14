@@ -1,4 +1,5 @@
 # Quick Move Buttons
+<img alt="Mod Downloads" src="https://img.shields.io/github/downloads/DumbCaveSpider/QuickMoveButtons/total?logo=geode&logoColor=ffffff&label=Downloads">
 
 > [!TIP]
 >
