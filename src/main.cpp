@@ -13,6 +13,9 @@
 using namespace geode::prelude;
 using namespace quickmove;
 
+// it's modding time :3
+auto qmbMod = getMod();
+
 // Returns the EditCommand based on object move size and direction
 EditCommand getEditCmd(MoveSize moveSize, MoveDirection moveDir) {
     switch (moveSize) {
@@ -152,8 +155,6 @@ class $modify(MyEditorUI, EditorUI) {
         ButtonSprite* m_moveLeftBtnBg;
         ButtonSprite* m_moveRightBtnBg;
 
-        ButtonSprite* m_moveSizeBtnBg;
-
         ButtonSprite* m_rotateClockwiseBtnBg;
         ButtonSprite* m_rotateCounterClockwiseBtnBg;
 
@@ -178,22 +179,22 @@ class $modify(MyEditorUI, EditorUI) {
         m_fields->m_buttonMenu->setID("quick-move-menu"_spr);
 
         // Get saved position or use center of screen as default
-        float savedX = Mod::get()->getSavedValue<float>("menuPositionX", CCDirector::sharedDirector()->getWinSize().width / 2);
-        float savedY = Mod::get()->getSavedValue<float>("menuPositionY", CCDirector::sharedDirector()->getWinSize().height / 2);
+        float savedX = qmbMod->getSavedValue<float>("menuPositionX", CCDirector::sharedDirector()->getWinSize().width / 2);
+        float savedY = qmbMod->getSavedValue<float>("menuPositionY", CCDirector::sharedDirector()->getWinSize().height / 2);
 
         m_fields->m_buttonMenu->setPosition(CCPoint(savedX, savedY));
         m_fields->m_buttonMenu->setAnchorPoint({ 0.5f, 0.5f });
 
         // Get background size from settings
-        int bgSize = Mod::get()->getSettingValue<int>("scale-bg");
-        m_fields->m_buttonMenu->setContentSize({ static_cast<float>(bgSize), static_cast<float>(bgSize) });
+        int bgSize = as<int>(qmbMod->getSettingValue<int64_t>("scale-bg"));
+        m_fields->m_buttonMenu->setContentSize({ as<float>(bgSize), as<float>(bgSize) });
 
         m_fields->m_buttonMenu->ignoreAnchorPointForPosition(false);
         m_fields->m_buttonMenu->setVisible(false); // Initially invisible since no objects are selected
 
         // create depth background for the menu (behind the main background)
         auto buttonMenuBgDepth = CCScale9Sprite::create("square02_001.png");
-        CCSize depthSize = { static_cast<float>(bgSize + 6), static_cast<float>(bgSize + 6) }; // Larger for depth
+        CCSize depthSize = { as<float>(bgSize + 6), as<float>(bgSize + 6) }; // Larger for depth
         buttonMenuBgDepth->setContentSize(depthSize);
         buttonMenuBgDepth->ignoreAnchorPointForPosition(false);
         buttonMenuBgDepth->setAnchorPoint({ 0.5, 0.5 });
@@ -329,7 +330,6 @@ class $modify(MyEditorUI, EditorUI) {
 
         // create the move size selector button (center) - draggable via touch handling
         auto sizeBtnSprite = CCSprite::createWithSpriteFrameName("gj_navDotBtn_off_001.png");
-        m_fields->m_moveSizeBtnBg = nullptr; // No ButtonSprite background for simple sprite
 
         m_fields->m_moveSizeBtn = CCMenuItemSpriteExtra::create(
             sizeBtnSprite,
@@ -496,7 +496,7 @@ class $modify(MyEditorUI, EditorUI) {
             return;
         };
 
-        log::info("Using edit command: {}", static_cast<int>(editCommand));
+        log::info("Using edit command: {}", as<int>(editCommand));
 
         // use move or transform depending on the kind of button being pressed
         switch (type) {
@@ -617,6 +617,7 @@ class $modify(MyEditorUI, EditorUI) {
         if (!m_fields->m_rotateClockwiseBtn || !m_fields->m_rotateCounterClockwiseBtn) return;
 
         bool hasSolid = hasSolidObjects();
+
         // Rotation icons should always use default scale (1.0f), not scale with move size
         float rotationIconScale = 1.0f;
 
@@ -672,7 +673,7 @@ class $modify(MyEditorUI, EditorUI) {
         };
 
         // Check if persistent button setting is enabled
-        bool isPersistent = Mod::get()->getSettingValue<bool>("presistent-btn");
+        bool isPersistent = qmbMod->getSettingValue<bool>("presistent-btn");
 
         // Use tracked UI visibility state instead of isVisible()
         bool isUIVisible = m_fields->m_isUIVisible;
@@ -694,7 +695,7 @@ class $modify(MyEditorUI, EditorUI) {
     };
 
     void updateButtonBackgroundVisibility() {
-        bool showButtonBG = Mod::get()->getSettingValue<bool>("visible-bg");
+        bool showButtonBG = qmbMod->getSettingValue<bool>("visible-bg");
 
         // good idea to use the buttonsprite, way better than using CCMenuItemSpriteExtra :)
         // also if statement wall
@@ -708,14 +709,13 @@ class $modify(MyEditorUI, EditorUI) {
 
         if (m_fields->m_flipXBtnBg) m_fields->m_flipXBtnBg->setVisible(showButtonBG);
         if (m_fields->m_flipYBtnBg) m_fields->m_flipYBtnBg->setVisible(showButtonBG);
-        // Note: m_moveSizeBtnBg is now nullptr since we use a simple sprite instead of ButtonSprite
     };
 
     void updateMenuScale() {
         if (!m_fields->m_buttonMenu) return;
 
         // Get the scale value from settings
-        float scaleValue = Mod::get()->getSettingValue<float>("scale-btns");
+        float scaleValue = as<float>(qmbMod->getSettingValue<double>("scale-btns"));
 
         // Apply the scale to the entire button menu
         m_fields->m_buttonMenu->setScale(scaleValue);
@@ -748,6 +748,7 @@ class $modify(MyEditorUI, EditorUI) {
         // Very frequent check for better paste detection - check every frame but throttle updates
         static float timer = 0.0f;
         static bool lastHasSelection = false;
+
         timer += dt;
 
         // Check selection state every frame
@@ -762,6 +763,7 @@ class $modify(MyEditorUI, EditorUI) {
         if (currentHasSelection != lastHasSelection) {
             updateButtonMenuVisibility();
             lastHasSelection = currentHasSelection;
+
             timer = 0.0f; // Reset timer
         };
 
@@ -772,6 +774,7 @@ class $modify(MyEditorUI, EditorUI) {
             updateMenuSize(); // Check menu size setting changes
             updateMenuScale(); // Check scale setting changes
             updateMenuOpacity(); // Check opacity setting changes
+
             timer = 0.0f;
         };
     };
@@ -839,7 +842,7 @@ class $modify(MyEditorUI, EditorUI) {
 
                 // If we're in the menu area but not on any button, we can start dragging (if enabled)
                 if (!onButton) {
-                    bool noDragging = Mod::get()->getSettingValue<bool>("no-dragging");
+                    bool noDragging = qmbMod->getSettingValue<bool>("no-dragging");
                     if (!noDragging) {
                         touchOnMenuBackground = true;
                         m_fields->m_touchStartPos = touch->getLocation();
@@ -907,8 +910,8 @@ class $modify(MyEditorUI, EditorUI) {
             // Save the new position
             CCPoint pos = m_fields->m_buttonMenu->getPosition();
 
-            Mod::get()->setSavedValue("menuPositionX", pos.x);
-            Mod::get()->setSavedValue("menuPositionY", pos.y);
+            qmbMod->setSavedValue("menuPositionX", pos.x);
+            qmbMod->setSavedValue("menuPositionY", pos.y);
 
             log::info("Saved new menu position: ({}, {})", pos.x, pos.y);
             m_fields->m_isDragging = false;
@@ -963,7 +966,7 @@ class $modify(MyEditorUI, EditorUI) {
 
     // Create button sprite based on settings
     ButtonSprite* createMoveButtonSprite(const std::string & text = "", int width = 20, bool absolute = true, const std::string & font = "bigFont.fnt", int height = 30, float scale = 0.1f) {
-        bool showButtonBG = Mod::get()->getSettingValue<bool>("visible-bg");
+        bool showButtonBG = qmbMod->getSettingValue<bool>("visible-bg");
 
         if (showButtonBG) {
             return ButtonSprite::create(text.c_str(), width, absolute, font.c_str(), "GJ_button_01.png", height, scale);
@@ -977,7 +980,7 @@ class $modify(MyEditorUI, EditorUI) {
         if (!m_fields->m_buttonMenu) return;
 
         // Get the opacity value from settings
-        int baseOpacity = Mod::get()->getSettingValue<int>("opacity-btn");
+        int baseOpacity = as<int>(qmbMod->getSettingValue<int64_t>("opacity-btn"));
 
         // If dragging, reduce opacity by 50
         int currentOpacity = m_fields->m_isDragging ? std::max(0, baseOpacity - 50) : baseOpacity;
@@ -1002,7 +1005,7 @@ class $modify(MyEditorUI, EditorUI) {
     void updateMenuBackgroundVisibility() {
         if (!m_fields->m_buttonMenuBg || !m_fields->m_buttonMenuBgDepth) return;
 
-        bool showMenuBG = Mod::get()->getSettingValue<bool>("menu-btn");
+        bool showMenuBG = qmbMod->getSettingValue<bool>("menu-btn");
 
         // Update visibility for both backgrounds
         m_fields->m_buttonMenuBg->setVisible(showMenuBG);
@@ -1045,9 +1048,10 @@ class $modify(MyEditorUI, EditorUI) {
         if (!m_fields->m_buttonMenu) return;
 
         // Get background size from settings
-        int bgSize = Mod::get()->getSettingValue<int>("scale-bg");
-        CCSize newSize = { static_cast<float>(bgSize), static_cast<float>(bgSize) };
-        CCSize depthSize = { static_cast<float>(bgSize + 6), static_cast<float>(bgSize + 6) }; // Larger for depth
+        int bgSize = as<int>(qmbMod->getSettingValue<int64_t>("scale-bg"));
+
+        CCSize newSize = { as<float>(bgSize), as<float>(bgSize) };
+        CCSize depthSize = { as<float>(bgSize + 6), as<float>(bgSize + 6) }; // Larger for depth
 
         // Update menu content size
         m_fields->m_buttonMenu->setContentSize(newSize);
@@ -1073,7 +1077,6 @@ class $modify(MyEditorPauseLayer, EditorPauseLayer) {
     bool init(LevelEditorLayer * p0) {
         if (!EditorPauseLayer::init(p0)) return false;
 
-        auto mod = getMod();
         auto guidelinesMenu = getChildByID("guidelines-menu");
 
         auto modSettingsBtnSprite = CCSprite::createWithSpriteFrameName("GJ_plainBtn_001.png");
@@ -1100,6 +1103,6 @@ class $modify(MyEditorPauseLayer, EditorPauseLayer) {
     };
 
     void onQmbModSettings(CCObject*) {
-        openSettingsPopup(getMod());
+        openSettingsPopup(qmbMod);
     };
 };

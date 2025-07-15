@@ -1,3 +1,6 @@
+# v1.0.3
+- Minor fixes
+
 # v1.0.2
 - Code cleanup
 - Fixed mod description previews

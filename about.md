@@ -12,13 +12,13 @@ In the mod's settings, you can customize button visuals and functionality.
 3. Press the center button to toggle the move units.
 
 # Credits
-- **Cheeseworks** - For helping me make this mod possible since I barely understand some functionality to make things work
-- **CyanBoi** - For beta testing, finding bugs and giving me feedbacks
-- **iCreate Pro** - For inspiration on the Custom Move Button feature
+- **[Cheeseworks](user:6408873)** - For helping me make this mod possible since I barely understand some functionality to make things work
+- **[CyanBoi](user:14497367)** - For beta testing, finding bugs and giving me feedbacks
+- **[iCreate Pro](https://icreate.pro/)** - For inspiration on the Custom Move Button feature
 
 # Previews
-![Preview 1 with button background](arcticwoof.quickmovebuttons/preview-1.png)
-![Preview 2 without button background](arcticwoof.quickmovebuttons/preview-2.png)
+![UI with button background](arcticwoof.quickmovebuttons/preview-1.png)
+![UI without button background](arcticwoof.quickmovebuttons/preview-2.png)
 
 # Known Bugs
 - Buttons disappears whenever you copy + paste multiple objects. Appears again whenever you move your editor 
