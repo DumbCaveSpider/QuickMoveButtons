@@ -34,7 +34,7 @@
 	"settings": {
 		"scale-btns": {
 			"name": "Button Scale",
-			"description": "Change the scale of the transform buttons, <co>the draggable area will also be affected</co>. <cr>Must reopen the editor to take effect.</cr>",
+			"description": "Change the scale of the transform buttons, <co>the draggable area will also be affected</co>. <cr>You must reopen the editor to take effect.</cr>",
 			"type": "float",
 			"default": 1,
 			"min": 0.5,
@@ -58,7 +58,7 @@
 		},
 		"scale-bg": {
 			"name": "Draggable Area Scale",
-			"description": "Change the scale of the draggable area. <cg>Useful if you can't drag properly due to the area size.</cg> <cr>Must reopen the editor to take effect.</cr>",
+			"description": "Change the scale of the draggable area. <cg>Useful if you can't drag properly due to the area size.</cg> <cr>You must reopen the editor to take effect.</cr>",
 			"type": "int",
 			"default": 130,
 			"min": 130,
@@ -70,7 +70,7 @@
 		},
 		"visible-bg": {
 			"name": "Show Button Background",
-			"description": "Show the backgrounds of the transform buttons. <cr>Must reopen the editor to take effect.</cr>",
+			"description": "Show the backgrounds of the transform buttons. <cr>You must reopen the editor to take effect.</cr>",
 			"type": "bool",
 			"default": false
 		},
@@ -88,7 +88,7 @@
 		},
 		"presistent-btn": {
 			"name": "Persistent Button",
-			"description": "Always show the transform buttons, even when an object is not selected.",
+			"description": "Always show the transform buttons, even when no objects are selected.",
 			"type": "bool",
 			"default": false
 		}

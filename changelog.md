@@ -1,5 +1,6 @@
 # v1.0.3
-- Minor fixes
+- Code cleanup
+- Minor tweaks
 
 # v1.0.2
 - Code cleanup

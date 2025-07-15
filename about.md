@@ -1,6 +1,6 @@
 # Quick Move Buttons
 
-> <cg>This mod is primarily intended for mobile users. But can be used on PC</c>
+> <cg>This mod is primarily intended for mobile users, but supports all platforms.</c>
 
 This mod adds a scalable and moveable UI to the level editor with move, rotate, and flip buttons to help you save time when transforming objects in the level editor! You can find a button to quickly access this mod's settings in the editor pause menu.
 
@@ -22,4 +22,4 @@ In the mod's settings, you can customize button visuals and functionality.
 
 # Known Bugs
 - Buttons disappears whenever you copy + paste multiple objects. Appears again whenever you move your editor 
-*(Best way to prevent this is enabling Button Presistent since I don't know how to fix this bug)*
+*(You can currently prevent this by enabling `Button Presistent` in the settings)*
