@@ -1,6 +1,6 @@
 # v1.0.3
 - Code cleanup
-- Fixed swipe mode triggering while touching menu
+- Fixed swipe mode triggering while touching menu [*Windows*, *Android*]
 - Minor tweaks
 
 # v1.0.2

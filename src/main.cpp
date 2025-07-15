@@ -678,10 +678,15 @@ class $modify(MyEditorUI, EditorUI) {
         };
     };
 
+    // hook is not currently bound on these platforms
+#if !defined(GEODE_IS_MACOS) && !defined(GEODE_IS_IOS)
+
     void triggerSwipeMode() {
         // Only trigger if not already touching the menu
         if (!m_fields->m_dontSwipe) EditorUI::triggerSwipeMode();
     };
+
+#endif
 
     // Override mouse/touch events to catch selection changes and handle dragging
     bool ccTouchBegan(CCTouch * touch, CCEvent * event) {
