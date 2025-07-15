@@ -60,6 +60,7 @@ class $modify(MyEditorUI, EditorUI) {
 
         // Dragging functionality
         bool m_isDragging = false;
+        bool m_dontSwipe = false;
 
         CCPoint m_touchStartPos;
         CCPoint m_menuStartPos;
@@ -73,7 +74,7 @@ class $modify(MyEditorUI, EditorUI) {
 
         // create menu for the buttons
         m_fields->m_buttonMenu = CCMenu::create();
-        m_fields->m_buttonMenu->setID("quick-move-menu"_spr);
+        m_fields->m_buttonMenu->setID("move-menu"_spr);
 
         // Get saved position or use center of screen as default
         float savedX = qmbMod->getSavedValue<float>("menuPositionX", CCDirector::sharedDirector()->getWinSize().width / 2);
@@ -676,6 +677,11 @@ class $modify(MyEditorUI, EditorUI) {
         };
     };
 
+    void triggerSwipeMode() {
+        // Only trigger if not already touching the menu
+        if (!m_fields->m_dontSwipe) EditorUI::triggerSwipeMode();
+    };
+
     // Override mouse/touch events to catch selection changes and handle dragging
     bool ccTouchBegan(CCTouch * touch, CCEvent * event) {
         // Reset dragging state
@@ -695,6 +701,9 @@ class $modify(MyEditorUI, EditorUI) {
             if (menuRect.containsPoint(menuLocal)) {
                 // Now check if it's NOT on any of the buttons
                 bool onButton = false;
+
+                // Disable accidental swiping
+                m_fields->m_dontSwipe = true;
 
                 // Check all directional buttons
                 if (m_fields->m_moveUpBtn && m_fields->m_moveUpBtn->isVisible()) {
@@ -740,10 +749,13 @@ class $modify(MyEditorUI, EditorUI) {
                 // If we're in the menu area but not on any button, we can start dragging (if enabled)
                 if (!onButton) {
                     bool noDragging = qmbMod->getSettingValue<bool>("no-dragging");
+
                     if (!noDragging) {
                         touchOnMenuBackground = true;
+
                         m_fields->m_touchStartPos = touch->getLocation();
                         m_fields->m_menuStartPos = m_fields->m_buttonMenu->getPosition();
+
                         log::info("Touch began on menu background at ({}, {}), ready for drag detection", m_fields->m_touchStartPos.x, m_fields->m_touchStartPos.y);
                     };
                 };
@@ -802,6 +814,9 @@ class $modify(MyEditorUI, EditorUI) {
     void ccTouchEnded(CCTouch * touch, CCEvent * event) {
         bool wasDragging = m_fields->m_isDragging;
         bool hadTouchStart = (m_fields->m_touchStartPos.x != 0 || m_fields->m_touchStartPos.y != 0);
+
+        // Allow swipe mode again
+        m_fields->m_dontSwipe = false;
 
         if (m_fields->m_isDragging) {
             // Save the new position

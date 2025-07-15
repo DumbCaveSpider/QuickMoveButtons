@@ -1,5 +1,6 @@
 # v1.0.3
 - Code cleanup
+- Fixed swipe mode triggering while touching menu
 - Minor tweaks
 
 # v1.0.2
