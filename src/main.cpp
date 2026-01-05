@@ -16,7 +16,7 @@ using namespace geode::prelude;
 using namespace quickmove;
 
 // it's modding time :3
-auto qmbMod = getMod();
+static auto qmbMod = getMod();
 
 class $modify(MyEditorUI, EditorUI) {
     struct Fields {
@@ -86,15 +86,16 @@ class $modify(MyEditorUI, EditorUI) {
         m_fields->m_buttonMenu->setAnchorPoint({ 0.5f, 0.5f });
 
         // Get background size from settings
-        int bgSize = as<int>(qmbMod->getSettingValue<int64_t>("scale-bg"));
-        m_fields->m_buttonMenu->setContentSize({ as<float>(bgSize), as<float>(bgSize) });
+        int bgSize = static_cast<int>(qmbMod->getSettingValue<int64_t>("scale-bg"));
+        m_fields->m_buttonMenu->setContentSize({ static_cast<float>(bgSize), static_cast<float>(bgSize) });
 
         m_fields->m_buttonMenu->ignoreAnchorPointForPosition(false);
         m_fields->m_buttonMenu->setVisible(false); // Initially invisible since no objects are selected
 
+        CCSize const depthSize = { static_cast<float>(bgSize + 6), static_cast<float>(bgSize + 6) }; // Larger for depth
+
         // create depth background for the menu (behind the main background)
         auto buttonMenuBgDepth = CCScale9Sprite::create("square02_001.png");
-        CCSize depthSize = { as<float>(bgSize + 6), as<float>(bgSize + 6) }; // Larger for depth
         buttonMenuBgDepth->setContentSize(depthSize);
         buttonMenuBgDepth->ignoreAnchorPointForPosition(false);
         buttonMenuBgDepth->setAnchorPoint({ 0.5, 0.5 });
@@ -117,8 +118,8 @@ class $modify(MyEditorUI, EditorUI) {
         m_fields->m_buttonMenu->addChild(buttonMenuBg);
 
         // Get current move size icon info
-        auto iconInfo = getMoveSizeIconInfo(m_fields->moveSize);
-        auto moveBtnIconSpriteName = iconInfo.first;
+        auto const iconInfo = getMoveSizeIconInfo(m_fields->moveSize);
+        auto const moveBtnIconSpriteName = iconInfo.first;
         auto iconScale = iconInfo.second;
 
         // create the up btn
@@ -395,7 +396,7 @@ class $modify(MyEditorUI, EditorUI) {
             return;
         };
 
-        log::info("Using edit command: {}", as<int>(editCommand));
+        log::info("Using edit command: {}", static_cast<int>(editCommand));
 
         // use move or transform depending on the kind of button being pressed
         switch (type) {
@@ -614,7 +615,7 @@ class $modify(MyEditorUI, EditorUI) {
         if (!m_fields->m_buttonMenu) return;
 
         // Get the scale value from settings
-        float scaleValue = as<float>(qmbMod->getSettingValue<double>("scale-btns"));
+        float scaleValue = static_cast<float>(qmbMod->getSettingValue<double>("scale-btns"));
 
         // Apply the scale to the entire button menu
         m_fields->m_buttonMenu->setScale(scaleValue);
@@ -849,8 +850,8 @@ class $modify(MyEditorUI, EditorUI) {
         if (!m_fields->m_moveUpIcon || !m_fields->m_moveDownIcon ||
             !m_fields->m_moveLeftIcon || !m_fields->m_moveRightIcon) return;
 
-        auto iconInfo = getMoveSizeIconInfo(m_fields->moveSize);
-        auto newSpriteName = iconInfo.first;
+        auto const iconInfo = getMoveSizeIconInfo(m_fields->moveSize);
+        auto const newSpriteName = iconInfo.first;
         auto newScale = iconInfo.second;
 
         // Update up arrow
@@ -898,7 +899,7 @@ class $modify(MyEditorUI, EditorUI) {
         if (!m_fields->m_buttonMenu) return;
 
         // Get the opacity value from settings
-        int baseOpacity = as<int>(qmbMod->getSettingValue<int64_t>("opacity-btn"));
+        int baseOpacity = static_cast<int>(qmbMod->getSettingValue<int64_t>("opacity-btn"));
 
         // If dragging, reduce opacity by 50
         int currentOpacity = m_fields->m_isDragging ? std::max(0, baseOpacity - 50) : baseOpacity;
@@ -966,10 +967,10 @@ class $modify(MyEditorUI, EditorUI) {
         if (!m_fields->m_buttonMenu) return;
 
         // Get background size from settings
-        int bgSize = as<int>(qmbMod->getSettingValue<int64_t>("scale-bg"));
+        int bgSize = static_cast<int>(qmbMod->getSettingValue<int64_t>("scale-bg"));
 
-        CCSize newSize = { as<float>(bgSize), as<float>(bgSize) };
-        CCSize depthSize = { as<float>(bgSize + 6), as<float>(bgSize + 6) }; // Larger for depth
+        CCSize const newSize = { static_cast<float>(bgSize), static_cast<float>(bgSize) };
+        CCSize const depthSize = { static_cast<float>(bgSize + 6), static_cast<float>(bgSize + 6) }; // Larger for depth
 
         // Update menu content size
         m_fields->m_buttonMenu->setContentSize(newSize);

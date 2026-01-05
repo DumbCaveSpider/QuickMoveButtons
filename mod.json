@@ -1,96 +1,96 @@
 {
-	"geode": "4.6.3",
-	"gd": {
-		"win": "2.2074",
-		"android": "2.2074",
-		"ios": "2.2074",
-		"mac": "2.2074"
-	},
-	"id": "arcticwoof.quickmovebuttons",
-	"name": "Quick Move Buttons",
-	"version": "v1.0.3",
-	"developers": [
-		"ArcticWoof",
-		"Cheeseworks"
-	],
-	"links": {
-		"source": "https://github.com/DumbCaveSpider/QuickMoveButtons",
-		"homepage": "https://arcticwoof.com.au/",
-		"community": "https://dsc.gg/arcticwoof"
-	},
-	"tags": [
-		"editor",
-		"interface",
-		"enhancement",
-		"offline",
-		"utility"
-	],
-	"description": "Adds move buttons outside the Edit tab.",
-	"resources": {
-		"sprites": [
-			"previews/*"
-		]
-	},
-	"settings": {
-		"scale-btns": {
-			"name": "Button Scale",
-			"description": "Change the scale of the transform buttons, <co>the draggable area will also be affected</co>. <cr>You must reopen the editor to take effect.</cr>",
-			"type": "float",
-			"default": 1,
-			"min": 0.5,
-			"max": 2,
-			"control": {
-				"slider": true,
-				"slider-step": 0.125
-			}
-		},
-		"opacity-btn": {
-			"name": "Button Opacity",
-			"description": "Change the opacity of the transform buttons. <cr>This does not affect the UI backgrounds and applies whenever you drag the buttons.</cr>",
-			"type": "int",
-			"default": 255,
-			"min": 75,
-			"max": 255,
-			"control": {
-				"slider": true,
-				"slider-step": 5
-			}
-		},
-		"scale-bg": {
-			"name": "Draggable Area Scale",
-			"description": "Change the scale of the draggable area. <cg>Useful if you can't drag properly due to the area size.</cg> <cr>You must reopen the editor to take effect.</cr>",
-			"type": "int",
-			"default": 130,
-			"min": 130,
-			"max": 200,
-			"control": {
-				"slider": true,
-				"slider-step": 10
-			}
-		},
-		"visible-bg": {
-			"name": "Show Button Background",
-			"description": "Show the backgrounds of the transform buttons. <cr>You must reopen the editor to take effect.</cr>",
-			"type": "bool",
-			"default": false
-		},
-		"menu-btn": {
-			"name": "Show Draggable Area",
-			"description": "Show the draggable area for transform buttons.",
-			"type": "bool",
-			"default": true
-		},
-		"no-dragging": {
-			"name": "Disable Dragging",
-			"description": "Disable dragging on the transform buttons, keeping them in a fixed position. <cg>Useful to prevent accidental dragging.</cg>",
-			"type": "bool",
-			"default": false
-		},
-		"presistent-btn": {
-			"name": "Persistent Button",
-			"description": "Always show the transform buttons, even when no objects are selected.",
-			"type": "bool",
-			"default": false
-		}
-	}
+    "geode": "4.10.0",
+    "gd": {
+        "win": "2.2074",
+        "android": "2.2074",
+        "ios": "2.2074",
+        "mac": "2.2074"
+    },
+    "id": "arcticwoof.quickmovebuttons",
+    "name": "Quick Move Buttons",
+    "version": "v1.0.3",
+    "developers": [
+        "ArcticWoof",
+        "Cheeseworks"
+    ],
+    "links": {
+        "source": "https://github.com/DumbCaveSpider/QuickMoveButtons",
+        "homepage": "https://arcticwoof.xyz/",
+        "community": "https://dsc.gg/arcticwoof"
+    },
+    "tags": [
+        "editor",
+        "interface",
+        "enhancement",
+        "offline",
+        "utility"
+    ],
+    "description": "Adds move buttons outside the Edit tab.",
+    "resources": {
+        "sprites": [
+            "previews/*"
+        ]
+    },
+    "settings": {
+        "scale-btns": {
+            "name": "Button Scale",
+            "description": "Change the scale of the transform buttons, <co>the draggable area will also be affected</co>. <cr>You must reopen the editor to take effect.</cr>",
+            "type": "float",
+            "default": 1,
+            "min": 0.5,
+            "max": 2,
+            "control": {
+                "slider": true,
+                "slider-step": 0.125
+            }
+        },
+        "opacity-btn": {
+            "name": "Button Opacity",
+            "description": "Change the opacity of the transform buttons. <cr>This does not affect the UI backgrounds and applies whenever you drag the buttons.</cr>",
+            "type": "int",
+            "default": 255,
+            "min": 75,
+            "max": 255,
+            "control": {
+                "slider": true,
+                "slider-step": 5
+            }
+        },
+        "scale-bg": {
+            "name": "Draggable Area Scale",
+            "description": "Change the scale of the draggable area. <cg>Useful if you can't drag properly due to the area size.</cg> <cr>You must reopen the editor to take effect.</cr>",
+            "type": "int",
+            "default": 130,
+            "min": 130,
+            "max": 200,
+            "control": {
+                "slider": true,
+                "slider-step": 10
+            }
+        },
+        "visible-bg": {
+            "name": "Show Button Background",
+            "description": "Show the backgrounds of the transform buttons. <cr>You must reopen the editor to take effect.</cr>",
+            "type": "bool",
+            "default": false
+        },
+        "menu-btn": {
+            "name": "Show Draggable Area",
+            "description": "Show the draggable area for transform buttons.",
+            "type": "bool",
+            "default": true
+        },
+        "no-dragging": {
+            "name": "Disable Dragging",
+            "description": "Disable dragging on the transform buttons, keeping them in a fixed position. <cg>Useful to prevent accidental dragging.</cg>",
+            "type": "bool",
+            "default": false
+        },
+        "presistent-btn": {
+            "name": "Persistent Button",
+            "description": "Always show the transform buttons, even when no objects are selected.",
+            "type": "bool",
+            "default": false
+        }
+    }
 }

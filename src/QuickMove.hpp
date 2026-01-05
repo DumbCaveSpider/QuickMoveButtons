@@ -2,13 +2,6 @@
 
 // Namespace with useful enum classes
 namespace quickmove {
-    // Type of transform
-    enum class TransformType {
-        Move = 1,
-        Rotate = 2,
-        Flip = 3,
-    };
-
     // Distance in which the buttons will move the objects on the grid
     enum class MoveSize {
         Tiny = 0,
@@ -24,6 +17,13 @@ namespace quickmove {
         Down = 2,
         Left = 3,
         Right = 4
+    };
+
+    // Type of transform
+    enum class TransformType {
+        Move = 1,
+        Rotate = 2,
+        Flip = 3,
     };
 
     // Returns the EditCommand based on object move size and direction
