@@ -179,6 +179,7 @@ class $modify(MyEditorUI, EditorUI) {
 
             // Dragging functionality
             bool m_isDragging = false;
+            bool m_dontSwipe = false;
 
             CCPoint m_touchStartPos;
             CCPoint m_menuStartPos;
@@ -1094,7 +1095,6 @@ class $modify(MyEditorPauseLayer, EditorPauseLayer) {
 
             auto mod = getMod();
             auto guidelinesMenu = getChildByID("guidelines-menu");
-
 
             auto settingsBtn = CircleButtonSprite::create(CCSprite::createWithSpriteFrameName("edit_areaModeBtn04_001.png"), CircleBaseColor::Green, CircleBaseSize::Small);
 
