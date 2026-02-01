@@ -1,13 +1,10 @@
 # v1.0.4
-
-- Ported to Geode v5.0.0
+- Minor tweaks
 
 # v1.0.3
-
 - Code cleanup
 - Fixed swipe mode triggering while touching menu [*Windows*, *Android*]
 - Minor tweaks
-
 
 # v1.0.2
 
