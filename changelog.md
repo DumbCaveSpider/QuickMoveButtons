@@ -1,4 +1,7 @@
 # v1.0.4
+- Ported to Geode v5.0.0
+- Fixed issue where copying + pasting multiple objects makes the buttons disappear
+- Tweaked the button size to be more consistent across
 - Minor tweaks
 
 # v1.0.3
