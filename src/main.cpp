@@ -232,7 +232,7 @@ class $modify(MyEditorUI, EditorUI) {
             m_fields->m_buttonMenu->addChild(m_fields->m_moveSizeBtn);
 
             // create rotate counter clockwise button
-            auto rotateCounterClockwiseSprite = ButtonSprite::create("", 18.5f, true, "bigFont.fnt", "GJ_button_01.png", 33.5f, 0.1f);
+            auto rotateCounterClockwiseSprite = ButtonSprite::create("", 18, true, "bigFont.fnt", "GJ_button_01.png", 33.5f, 0.1f);
             m_fields->m_rotateCounterClockwiseBtnBg = rotateCounterClockwiseSprite;
 
             m_fields->m_rotateCounterClockwiseBtn = CCMenuItemSpriteExtra::create(
@@ -255,7 +255,7 @@ class $modify(MyEditorUI, EditorUI) {
             m_fields->m_buttonMenu->addChild(m_fields->m_rotateCounterClockwiseBtn);
 
             // create rotate clockwise button
-            auto rotateClockwiseSprite = ButtonSprite::create("", 18.5f, true, "bigFont.fnt", "GJ_button_01.png", 33.5f, 0.1f);
+            auto rotateClockwiseSprite = ButtonSprite::create("", 18, true, "bigFont.fnt", "GJ_button_01.png", 33.5f, 0.1f);
             m_fields->m_rotateClockwiseBtnBg = rotateClockwiseSprite;
 
             m_fields->m_rotateClockwiseBtn = CCMenuItemSpriteExtra::create(
@@ -279,7 +279,7 @@ class $modify(MyEditorUI, EditorUI) {
             m_fields->m_buttonMenu->addChild(m_fields->m_rotateClockwiseBtn);
 
             // create flip x button
-            auto flipXSprite = ButtonSprite::create("", 18.5f, true, "bigFont.fnt", "GJ_button_01.png", 33.5f, 0.1f);
+            auto flipXSprite = ButtonSprite::create("", 18, true, "bigFont.fnt", "GJ_button_01.png", 33.5f, 0.1f);
             m_fields->m_flipXBtnBg = flipXSprite;
 
             m_fields->m_flipXBtn = CCMenuItemSpriteExtra::create(
@@ -303,7 +303,7 @@ class $modify(MyEditorUI, EditorUI) {
             m_fields->m_buttonMenu->addChild(m_fields->m_flipXBtn);
 
             // create flip y button
-            auto flipYSprite = ButtonSprite::create("", 18.5f, true, "bigFont.fnt", "GJ_button_01.png", 33.5f, 0.1f);
+            auto flipYSprite = ButtonSprite::create("", 18, true, "bigFont.fnt", "GJ_button_01.png", 33.5f, 0.1f);
             m_fields->m_flipYBtnBg = flipYSprite;
 
             m_fields->m_flipYBtn = CCMenuItemSpriteExtra::create(
